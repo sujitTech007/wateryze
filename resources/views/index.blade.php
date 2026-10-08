@@ -1,114 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-
-    <title>Wateryze</title>
-
-    <!-- Fav Icon -->
-    <link rel="icon" href="images/favicon.png" type="image/x-icon">
-
-    <!-- Google Fonts -->
-
-    <!-- Stylesheets -->
-   <link href="css/all.min.css?v=1.0" rel="stylesheet">
-<link href="css/flaticon.css?v=1.0" rel="stylesheet">
-<link href="css/owl.css?v=1.0" rel="stylesheet">
-<link href="css/bootstrap.css?v=1.0" rel="stylesheet">
-<link href="css/jquery.fancybox.min.css?v=1.0" rel="stylesheet">
-<link href="css/animate.css?v=1.0" rel="stylesheet">
-<link href="css/imagebg.css?v=1.0" rel="stylesheet">
-<link href="css/color.css?v=1.0" rel="stylesheet">
-<link href="css/style.css?v=1.2" rel="stylesheet">
-<link href="css/responsive.css?v=1.0" rel="stylesheet">
-    
-</head>
-
-
-<!-- page wrapper -->
-
-<body class="boxed_wrapper">
-
-
-
-    <!-- MAIN HEADER -->
-    <header class="main-header">
-        <div class="container">
-            <div class="header-inner d-flex align-items-center justify-content-between">
-
-                <!-- Logo -->
-                <a href="/" class="logo d-flex align-items-center">
-                    <img src="images/logo.png" alt="Wateryze Logo">
-                </a>
-
-                <!-- Navigation -->
-                <ul class="nav main-menu">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="service.html">Service</a></li>
-                    <li><a href="industry.html">Industries</a></li>
-                    <!-- <li><a href="blog_grid.html">Blog</a></li> -->
-                    <li><a href="subscription.html">Subscription</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-
-                <!-- Buttons -->
-                <div class="header-buttons">
-                    <a href="login.html" class="btn btn-login">Login</a>
-                    <a href="signup.html" class="btn btn-signup">Sign Up</a>
-                </div>
-
-                <!-- Mobile Menu Toggle -->
-                <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
-
-            </div>
-        </div>
-    </header>
-    <!-- MAIN HEADER END -->
-
-
-    <!-- Mobile Menu  -->
-    <div class="mobile-menu">
-        <div class="menu-backdrop"></div>
-        <div class="close-btn"><i class="fas fa-times"></i></div>
-
-        <nav class="menu-box">
-            <div class="nav-logo"><a href="index.html"><img src="images/logo.png" alt="" title=""></a></div>
-            <div class="menu-outer">
-                <ul class="navigation">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="service.html">Service</a></li>
-                    <li><a href="industry.html">Industries</a></li>
-                    <!-- <li><a href="blog_grid.html"></a></li> -->
-                    <li><a href="subscription.html">Subscription</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="contact-info">
-                <h4>Contact Info</h4>
-                <ul>
-                    <li>Vancouver - British Columbia</li>
-                    <li><a href="mailto:info@wateryze.com">info@wateryze.com</a></li>
-                </ul>
-            </div>
-            <div class="social-links">
-                <ul class="clearfix">
-                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                    <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
-                    <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
-                    <li><a href="#"><span class="fab fa-instagram"></span></a></li>
-                    <li><a href="#"><span class="fab fa-youtube"></span></a></li>
-                </ul>
-            </div>
-        </nav>
-    </div><!-- End Mobile Menu -->
-
+@include('include.header')
 
     <!-- main-slider -->
     <section class="hero-section">
@@ -134,8 +24,8 @@
                         </p>
 
                         <div class="hero-buttons">
-                            <a href="#" class="btn btn-primary-custom">REQUEST A DEMO</a>
-                            <a href="#" class="btn btn-secondary-custom">GET A FREE CONSULTANT</a>
+                            <a href="{{ route('contact') }}" class="btn btn-primary-custom">REQUEST A DEMO</a>
+                            <a href="{{ route('contact') }}" class="btn btn-secondary-custom">GET A FREE CONSULTANT</a>
                         </div>
                     </div>
                 </div>
@@ -171,7 +61,7 @@
                     <p>
                        Our industry-specific chemical kits are pre-formulated and pre-measured, making water treatment  effective.
                     </p>
-                    <a href="service.html">Know More</a>
+                    <a href="{{ route('service') }}">Know More</a>
                 </div>
 
                 <div class="col-lg-3 col-md-3 feature-item ">
@@ -183,7 +73,7 @@
                         With our real-time sensor integration, you can monitor water quality and system performance
                         24/7.
                     </p>
-                    <a href="service.html">Know More</a>
+                    <a href="{{ route('service') }}">Know More</a>
                 </div>
 
                 <div class="col-lg-3 col-md-3 feature-item ">
@@ -194,7 +84,7 @@
                     <p>
                         Our automated compliance reporting keeps you audit-ready at all times. Reports are generated.
                     </p>
-                    <a href="service.html">Know More</a>
+                    <a href="{{ route('service') }}">Know More</a>
                 </div>
 
                 <div class="col-lg-3 col-md-3 feature-item ">
@@ -205,7 +95,7 @@
                     <p>
                         That’s why our platform connects you to on-demand experts and certified technicians.
                     </p>
-                    <a href="service.html">Know More</a>
+                    <a href="{{ route('service') }}">Know More</a>
                 </div>
 
             </div>
@@ -279,7 +169,7 @@
               </li>
             </ul>
 
-            <a href="s" class="pricing-btn">
+            <a href="{{ route('subscription') }}" class="pricing-btn">
               START NOW
               <span>→</span>
             </a>
@@ -327,7 +217,7 @@
               </li>
             </ul>
 
-            <a href="subscription.html" class="pricing-btn">
+            <a href="{{ route('subscription') }}" class="pricing-btn">
               START NOW
               <span>→</span>
             </a>
@@ -525,13 +415,13 @@
                     <!-- BUTTONS -->
                     <div class="wz-compliance-buttons d-flex flex-wrap gap-3"style="gap: 10px;">
 
-                        <a href="contact.html"
+                        <a href="{{ route('contact') }}"
                            class="wz-btn wz-btn-primary">
                             GET STARTED TODAY
                             <span>→</span>
                         </a>
 
-                        <a href="#"
+                        <a href="{{ route('contact') }}"
                            class="wz-btn wz-btn-outline">
                             REQUEST FOR ESTIMATE
                         </a>
@@ -617,214 +507,4 @@
     </section>
     <!-- testimonial-section end -->
 
-
-    <!-- news-section -->
-    <!-- <section class="news-section">
-        <div class="auto-container">
-            <div class="sec-title text-center">
-                <h1>Clean Water. Clear Compliance. Smarter Business</h1>
-            </div>
-            <div class="row clearfix">
-                <div class="col-lg-6 col-md-6 col-sm-12 news-block">
-                    <div class="news-block-one wow fadeInUp" data-wow-delay="00ms" data-wow-duration="1500ms">
-                        <div class="inner-box">
-                            <figure class="image-box"><a href="blog-details.html"><img src="images/news_1.jpg"
-                                        alt=""></a></figure>
-                            <div class="lower-content">
-                                <div class="inner">
-                                    <ul class="info-box clearfix mb-3">
-                                        <li><a href="#"><i class="fa-solid fa-user"></i>Emal Kanson</a></li>
-                                        <li>Oct 25, 2019</li>
-                                        <li><a href="#"><i class="fa-solid fa-comment"></i>Comments
-                                                34</a></li>
-                                    </ul>
-                                    <h2><a href="blog-details.html">Insights & Resources for Smarter Compliance</a></h2>
-                                    <p class="text">From understanding wastewater treatment basics to mastering
-                                        digital compliance...</p>
-                                    <div class="lower-box clearfix">
-                                        <div class="btn-box pull-left"><a href="blog-details.html">Read More</a></div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 news-block">
-                    <div class="news-block-one wow fadeInUp" data-wow-delay="300ms" data-wow-duration="1500ms">
-                        <div class="inner-box">
-                            <figure class="image-box"><a href="blog-details.html"><img src="images/news_2.jpg" alt=""
-                                        style="    height: 370px;"></a></figure>
-                            <div class="lower-content">
-                                <div class="inner">
-                                    <ul class="info-box clearfix mb-3">
-                                        <li><a href="#"><i class="fa-solid fa-user"></i>Mahfuz Riad</a></li>
-                                        <li>Oct 24, 2019</li>
-                                        <li><a href="#"><i class="fa-solid fa-comment"></i>Comments
-                                                22</a></li>
-                                    </ul>
-                                    <h2><a href="blog-details.html">Wastewater, Compliance & Sustainability</a></h2>
-                                    <p class="text">We bring you the latest updates on wastewater regulations,
-                                        environmental best practices ...</p>
-                                    <div class="lower-box clearfix">
-                                        <div class="btn-box pull-left"><a href="blog-details.html">Read More</a></div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
-    <!-- news-section end -->
-
-
-    <!-- clients-section  -->
-    <!-- <section class="clients-section">
-        <div class="auto-container">
-            <div class="top-title clearfix">
-                <div class="title-inner">
-                    <div class="sec-title">
-                        <h1>Trusted Partners</h1>
-                    </div>
-                </div>
-                <div class="text-inner">
-                    <div class="text">We collaborate with leading laboratories, sensor providers, and environmental
-                        consultants to deliver reliable, sustainable, and regulation-ready wastewater treatment
-                        solutions.</div>
-                </div>
-            </div>
-            <div class="clients-carousel owl-carousel owl-theme owl-nav-none owl-dots-none">
-                <figure class="image-box"><a href="#"><img src="images/client_1.png" alt=""></a></figure>
-                <figure class="image-box"><a href="#"><img src="images/client_2.png" alt=""></a></figure>
-                <figure class="image-box"><a href="#"><img src="images/client_3.png" alt=""></a></figure>
-                <figure class="image-box"><a href="#"><img src="images/client_4.png" alt=""></a></figure>
-                <figure class="image-box"><a href="#"><img src="images/client_5.png" alt=""></a></figure>
-            </div>
-        </div>
-    </section> -->
-    <!-- clients-section end -->
-
-
-    <!-- main-footer -->
-    <footer class="main-footer">
-        <div class="footer-top">
-            <div class="border-shap">
-                <div class="border-3" style="background-image: url(images/border-4.png);"></div>
-            </div>
-            <div class="auto-container">
-                <div class="inner-box clearfix">
-                    <div class="subscribe-form pull-left">
-                        <form action="#" method="post" class="subscribe-form">
-                            <div class="form-group">
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    placeholder="Email address to subscribe" 
-                                    required
-                                >
-                                <button type="submit" class="theme-btn style-two">
-                                    Subscribe
-                                </button>
-                            </div>
-                        </form>
-
-                    </div>
-                    <div class="footer-social pull-right">
-                        <ul class="social-links clearfix">
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
-                             <!-- <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li> -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-upper">
-            <div class="auto-container">
-                <div class="widget-section wow fadeInUp" data-wow-delay="300ms" data-wow-duration="1500ms">
-                    <div class="row clearfix">
-                        <div class="col-lg-4 col-md-6 col-sm-12 footer-column">
-                            <div class="logo-widget footer-widget">
-                                <figure class="footer-logo"><a href="#"><img src="images/footer.png" alt=""></a></figure>
-                                <div class="text">A subscription-based platform that simplifies wastewater treatment and
-                                    compliance for small and mid-sized businesses across Canada.</div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12 footer-column">
-                            <div class="links-widget footer-widget">
-                                <h3 class="widget-title">About Us</h3>
-                                <div class="widget-content">
-                                    <ul class="list clearfix">
-                                        <li><a href="service.html">Why Choose Us</a></li>
-                                        <li><a href="industry.html">Industries We Serve</a></li>
-                                        <li><a href="contact.html">Contact us</a></li>
-                                        <li><a href="terms-condition.html">Terms & Conditions</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-lg-3 col-md-6 col-sm-12 footer-column">
-                            <div class="shediul-widget footer-widget">
-                                <h3 class="widget-title">Business Hours</h3>
-                                <div class="widget-content">
-                                    <ul class="list clearfix">
-                                        <li>Monday-Friday: 9am to 5pm</li>
-                                        <li>Saturday: 10am to 4pm</li>
-                                        <li>Sunday: Closed</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-lg-4 col-md-6 col-sm-12 footer-column">
-                            <div class="contact-widget footer-widget">
-                                <h3 class="widget-title">Contact us</h3>
-                                <div class="widget-content">
-                                    <ul class="list clearfix">
-                                        <li>Vancouver - British Columbia</li>
-                                        <!-- <li>Call Us <a href="tel:12078761059">+1 207-876-1059</a></li> -->
-                                        <li>E-mail: <a href="mailto:info@example.com"> info@wateryze.com</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="auto-container">
-                <div class="copyright">Copyrights &copy; 2025 <a href="#">Wateryze Platform</a>. All rights reserved.
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- main-footer end -->
-
-
-    <!--Scroll to top-->
-    <button class="scroll-top scroll-to-target" data-target="html">
-        <span class="fas fa-angle-up"></span>
-    </button>
-
-
-    <!-- jequery plugins -->
-    <script src="js/jquery.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.js"></script>
-    <script src="js/wow.js"></script>
-    <script src="js/validation.js"></script>
-    <script src="js/jquery.fancybox.js"></script>
-    <script src="js/scrollbar.js"></script>
-
-    <!-- main-js -->
-    <script src="js/script.js"></script>
-
-</body>
-
-</html>
+    @include('include.footer')
