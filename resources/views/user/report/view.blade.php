@@ -24,7 +24,7 @@
 
 
 
-            <a href="reports.html"
+            <a href="{{ route('user.reports.index') }}"
 
                class="btn btn-sm btn-primary mb-3">
 
@@ -60,7 +60,7 @@
 
 
 
-            <a href="edit-report.html"
+            <a href="{{ route('user.reports.edit') }}"
 
                class="btn btn-primary">
 
@@ -1096,7 +1096,7 @@
 
 
 
-                    <a href="edit-report.html"
+                    <a href="{{ route('user.reports.edit') }}"
 
                        class="btn btn-outline-primary">
 

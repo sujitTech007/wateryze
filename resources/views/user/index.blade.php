@@ -2,6 +2,9 @@
 
             <!-- ========== DASHBOARD CONTENT START ========== -->
             <div class="content-area">
+                @if (session('status'))
+                    <div class="alert alert-success" role="status">{{ session('status') }}</div>
+                @endif
 
                 <!-- ================= DASHBOARD HEADER ================= -->
                 <div class="d-flex flex-column flex-md-row
@@ -14,7 +17,7 @@
                         </small>
 
                         <h5 class="mb-1 mt-1">
-                            Welcome back William!
+                            Welcome to your dashboard
                         </h5>
 
                         <small class="text-secondary">
@@ -400,7 +403,7 @@
 
                                     </div>
 
-                                    <a href="compliance.html" class="small text-primary
+                                    <a href="{{ route('user.compliance') }}" class="small text-primary
                                   text-decoration-none">
 
                                         View All

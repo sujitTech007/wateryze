@@ -40,14 +40,4 @@ class FrontController extends Controller
     {
         return view('terms-condition');
     }
-
-    public function login(): View
-    {
-        return view('login');
-    }
-
-    public function signup(): View
-    {
-        return view('signup');
-    }
 }

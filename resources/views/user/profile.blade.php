@@ -194,7 +194,7 @@
                                     <div class="profile-label">Password Status</div>
                                     <div class="profile-value">
                                         Last changed 60 days ago
-                                        <a href="settings.html" class="btn-edit ms-3" style="padding: 5px 15px; font-size: 12px;">
+                                        <a href="{{ route('user.settings') }}" class="btn-edit ms-3" style="padding: 5px 15px; font-size: 12px;">
                                             Change Password
                                         </a>
                                     </div>
@@ -203,7 +203,7 @@
                                     <div class="profile-label">Two-Factor Authentication</div>
                                     <div class="profile-value">
                                         <span style="background: #ffc107; color: white; padding: 3px 8px; border-radius: 3px; font-size: 12px;">Disabled</span>
-                                        <a href="settings.html" class="btn-edit ms-3" style="padding: 5px 15px; font-size: 12px;">
+                                        <a href="{{ route('user.settings') }}" class="btn-edit ms-3" style="padding: 5px 15px; font-size: 12px;">
                                             Enable 2FA
                                         </a>
                                     </div>
@@ -239,15 +239,18 @@
                             <div class="profile-card">
                                 <h3 class="mb-3">Quick Links</h3>
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                                    <a href="settings.html" class="btn btn-outline-primary btn-sm">
+                                    <a href="{{ route('user.settings') }}" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-cog"></i> Account Settings
                                     </a>
-                                    <a href="notifications.html" class="btn btn-outline-primary btn-sm">
+                                    <a href="{{ route('user.notifications') }}" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-bell"></i> Notifications
                                     </a>
-                                    <a href="#" class="btn btn-outline-danger btn-sm" onclick="logout()">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </a>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -269,13 +272,6 @@
 
             viewElement.classList.toggle('hidden');
             editElement.classList.toggle('active');
-        }
-
-        // Logout Function
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '../login.html';
-            }
         }
 
         // Profile Button Dropdown

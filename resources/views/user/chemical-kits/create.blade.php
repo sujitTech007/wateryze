@@ -12,7 +12,7 @@
             </p>
         </div>
 
-        <a href="Chemical-Kit-Usage.html" class="btn btn-primary mt-3 mt-md-0">
+        <a href="{{ route('user.chemical-kits.index') }}" class="btn btn-primary mt-3 mt-md-0">
             <i class="fas fa-arrow-left me-2"></i>
             Back to Usage
         </a>
@@ -178,7 +178,7 @@
                         <div class="d-flex justify-content-end gap-2">
 
                             <a
-                                href="chemical-kit-usage.html"
+                                href="{{ route('user.chemical-kits.index') }}"
                                 class="btn btn-outline-secondary"
                             >
                                 Cancel

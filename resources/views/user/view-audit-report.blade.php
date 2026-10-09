@@ -20,7 +20,7 @@
                 Download Report
             </button>
 
-            <a href="compliance.html" class="btn btn-primary">
+            <a href="{{ route('user.compliance') }}" class="btn btn-primary">
                 <i class="fas fa-arrow-left me-2"></i>
                 Back to Compliance
             </a>

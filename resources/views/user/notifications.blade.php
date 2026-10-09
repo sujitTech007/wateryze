@@ -278,7 +278,7 @@
 
                     <p class="text-muted mb-3">Configure your notification preferences and alert thresholds</p>
 
-                    <a href="settings.html" class="btn btn-primary">
+                    <a href="{{ route('user.settings') }}" class="btn btn-primary">
 
                         <i class="fas fa-cog"></i> Go to Settings
 

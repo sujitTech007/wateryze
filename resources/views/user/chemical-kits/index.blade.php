@@ -33,7 +33,7 @@
                         </button>
 
 
-                        <a href="add-Chemical-Kit-Usage copy.html" type="button" class="btn btn-primary btn-sm">
+                        <a href="{{ route('user.chemical-kits.create') }}" class="btn btn-primary btn-sm">
 
                             <i class="fas fa-plus me-2"></i>
                             Add Usage

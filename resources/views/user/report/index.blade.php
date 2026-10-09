@@ -112,9 +112,9 @@
 
                                     <td>
 
-                                      <a href="reports-view.html" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
+                                      <a href="{{ route('user.reports.view') }}" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
 
-                                        <a href="reports-edit.html" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('user.reports.edit') }}" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
 
                                         <a href="#" class="btn btn-sm btn-link text-danger"data-bs-toggle="modal"
 
@@ -156,9 +156,9 @@
 
                                     <td>
 
-                                      <a href="reports-view.html" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
+                                      <a href="{{ route('user.reports.view') }}" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
 
-                                        <a href="reports-edit.html" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('user.reports.edit') }}" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
 
                                         <a href="#" class="btn btn-sm btn-link text-danger"data-bs-toggle="modal"
 
@@ -200,9 +200,9 @@
 
                                     <td>
 
-                                        <a href="reports-view.html" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('user.reports.view') }}" class="btn btn-sm btn-link"><i class="fas fa-eye"></i></a>
 
-                                        <a href="reports-edit.html" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('user.reports.edit') }}" class="btn btn-sm btn-link"><i class="fas fa-edit"></i></a>
 
                                         <a href="#" class="btn btn-sm btn-link text-danger" data-bs-toggle="modal"
 

@@ -1,82 +1,57 @@
-﻿@include('include.header')
+@include('include.header')
 
+<div class="container min-vh-100 d-flex align-items-center justify-content-center mt-5">
+    <div class="row shadow-lg rounded-4 overflow-hidden" style="width: 100%; background:#fff; border-radius: 8px;">
+        <div class="col-md-6 p-5">
+            <h3 class="fw-bold mb-1">Login</h3>
+            <p class="text-muted mb-4">Login to access your account</p>
 
-    <div class="container min-vh-100 d-flex align-items-center justify-content-center mt-5">
-        <div class="row shadow-lg rounded-4 overflow-hidden" style="width: 100%; background:#fff; border-radius: 8px;">
+            <form action="{{ route('login.store') }}" method="POST">
+                @csrf
 
-            <!-- LEFT -->
-            <div class="col-md-6 p-5">
-                <h3 class="fw-bold mb-1">Login</h3>
-                <p class="text-muted mb-4">Login to access account</p>
-
-                <form action="#">
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="William@gmail.com">
-                    </div>
-
-                    <div class="mb-3 position-relative">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-control" value="password">
-                        <span style="position:absolute; right:12px; top:38px; cursor:pointer;">👁</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
-                            <label class="form-check-label">Remember me</label>
-                        </div>
-                        <a href="#" class="text-decoration-none">Forgot Password</a>
-                    </div>
-
-
-
-                    <button class="login w-100  py-2 mb-3 text-white"
-                        style="background: #2f6db5; border-radius: 8px; border: 1px;">
-                        Login
-                    </button>
-                </form>
-
-                <p class="text-center small">
-                    Don’t have an account? <a href="{{ route('signup') }}">Sign up</a>
-                </p>
-
-                <div class="text-center text-muted my-1">
-                    ─── Or login with ───
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" name="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                        value="{{ old('email') }}" autocomplete="email" required autofocus>
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                <div class="row g-3 mt-1">
-                    <div class="col-4">
-                        <button class="btn w-100 d-flex align-items-center justify-content-center"
-                            style="border:1.5px solid #2f6db5; height:56px; border-radius:10px; background:#fff;">
-                            <i class="fab fa-facebook-f text-primary fs-4"></i>
-                        </button>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input id="password" name="password" type="password"
+                            class="form-control @error('password') is-invalid @enderror" autocomplete="current-password" required>
+                        <button class="btn btn-outline-secondary" type="button" data-password-toggle="password"
+                            aria-label="Show password" aria-pressed="false">Show</button>
                     </div>
-
-                    <div class="col-4">
-                        <button class="btn w-100 d-flex align-items-center justify-content-center"
-                            style="border:1.5px solid #2f6db5; height:56px; border-radius:10px; background:#fff;">
-                            <i class="fab fa-google fs-4" style="color:#DB4437;"></i>
-                        </button>
-                    </div>
-
-                    <div class="col-4">
-                        <button class="btn w-100 d-flex align-items-center justify-content-center"
-                            style="border:1.5px solid #2f6db5; height:56px; border-radius:10px; background:#fff;">
-                            <i class="fab fa-apple fs-4 text-dark"></i>
-                        </button>
-                    </div>
+                    @error('password')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
                 </div>
 
-            </div>
+                <div class="form-check mb-4">
+                    <input id="remember" name="remember" class="form-check-input" type="checkbox" value="1"
+                        @checked(old('remember'))>
+                    <label for="remember" class="form-check-label">Remember me</label>
+                </div>
 
-            <!-- RIGHT IMAGE -->
-            <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center">
-                <img src="images/rectangle.png" class="img-fluid rounded-4" style="max-width:85%; height: 95%;">
-            </div>
+                <button type="submit" class="login w-100 py-2 mb-3 text-white"
+                    style="background: #2f6db5; border-radius: 8px; border: 1px;">
+                    Login
+                </button>
+            </form>
 
+            <p class="text-center small">
+                Don’t have an account? <a href="{{ route('signup') }}">Sign up</a>
+            </p>
+        </div>
+
+        <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center">
+            <img src="{{ asset('public/front/images/rectangle.png') }}" alt="" class="img-fluid rounded-4" style="max-width:85%; height: 95%;">
         </div>
     </div>
-
+</div>
 
 @include('include.footer')

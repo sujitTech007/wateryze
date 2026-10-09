@@ -26,7 +26,7 @@
                             Export Report
                         </button>
 
-                        <a href="view-audit-report.html" type="button" class="btn btn-primary btn-sm">
+                        <a href="{{ route('user.audit-report') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-file-alt me-2"></i>
                             View Audit Report
                         </a>

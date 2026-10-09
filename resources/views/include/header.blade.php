@@ -60,6 +60,15 @@
 
     <link href="{{ asset('public/front/css/responsive.css?v=1.0') }}" rel="stylesheet">
 
+    @if (request()->routeIs('signup'))
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/css/intlTelInput.css">
+        <style>
+            .iti {
+                width: 100%;
+            }
+        </style>
+    @endif
+
 
 
 </head>
@@ -121,8 +130,16 @@
 
                 <div class="header-buttons">
 
-                    <a href="{{ route('login') }}" class="btn btn-login">Login</a>
-                    <a href="{{ route('signup') }}" class="btn btn-signup">Sign Up</a>
+                    @auth
+                        <span class="me-2">{{ auth()->user()->first_name }}</span>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-login">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
+                        <a href="{{ route('signup') }}" class="btn btn-signup">Sign Up</a>
+                    @endauth
 
                 </div>
 
@@ -139,3 +156,9 @@
         </div>
 
     </header>
+
+    @if (session('status'))
+        <div class="container mt-3">
+            <div class="alert alert-success mb-0" role="status">{{ session('status') }}</div>
+        </div>
+    @endif

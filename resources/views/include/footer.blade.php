@@ -206,6 +206,22 @@
 
     <!-- main-js -->
     <script src="{{ asset('public/front/js/script.js') }}"></script>
+    @if (request()->routeIs('signup'))
+        <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/js/intlTelInput.min.js"></script>
+        <script src="{{ asset('public/front/js/country-phone.js') }}"></script>
+    @endif
+    <script>
+        document.querySelectorAll('[data-password-toggle]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const password = document.getElementById(button.dataset.passwordToggle);
+                const visible = password.type === 'password';
+                password.type = visible ? 'text' : 'password';
+                button.textContent = visible ? 'Hide password' : 'Show password';
+                button.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+                button.setAttribute('aria-pressed', String(visible));
+            });
+        });
+    </script>
 
 </body>
 

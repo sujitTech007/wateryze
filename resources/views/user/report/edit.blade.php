@@ -12,7 +12,7 @@
 
         <div>
 
-            <a href="reports.html"
+            <a href="{{ route('user.reports.index') }}"
                class="btn btn-sm btn-outline-secondary mb-3">
 
                 <i class="fas fa-arrow-left me-1"></i>
@@ -489,7 +489,7 @@
         <!-- ACTION BUTTONS -->
         <div class="d-flex justify-content-end gap-2 mt-4">
 
-            <a href="reports.html"
+            <a href="{{ route('user.reports.index') }}"
                class="btn btn-outline-secondary">
 
                 Cancel
