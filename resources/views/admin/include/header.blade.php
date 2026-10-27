@@ -24,7 +24,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="icon" href="../images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="{{ asset('backend/images/favicon.png') }}" type="image/x-icon">
 
 
 
@@ -44,7 +44,7 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="../assets/css/styles.css?v=1.3">
+    <link rel="stylesheet" href="{{ asset('public/backend/css/style.css') }}">
 
 </head>
 
@@ -64,9 +64,8 @@
 
                 <div class="logo-wrapper">
 
-                    <a href="../index.html" class="logo-link">
-
-                        <img src="../assets/images/logo.png" alt="Wateryze Logo" class="logo-img">
+                    <a href="{{ route('admin.index') }}" class="logo-link">
+                        <img src="{{ asset('backend/images/logo.png') }}" alt="Wateryze Logo" class="logo-img">
 
                     </a>
 
@@ -88,7 +87,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../index.html" class="nav-link ">
+                    <a href="{{ route('admin.index') }}" class="nav-link {{ request()->routeIs('admin.index', 'admin.dashboard') ? 'active' : '' }}">
 
                         <i class="fas fa-chart-line"></i>
 
@@ -100,7 +99,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../user/users.html" class="nav-link">
+                    <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
 
                         <i class="fas fa-users"></i>
 
@@ -112,7 +111,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../water-usage.html" class="nav-link">
+                    <a href="{{ route('admin.water-usage') }}" class="nav-link {{ request()->routeIs('admin.water-usage') ? 'active' : '' }}">
 
                         <i class="fas fa-water"></i>
 
@@ -124,7 +123,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../chemical-kits/chemical-kits.html" class="nav-link">
+                    <a href="{{ route('admin.chemical-usage') }}" class="nav-link {{ request()->routeIs('admin.chemical-usage') ? 'active' : '' }}">
 
                         <i class="fas fa-flask"></i>
 
@@ -136,7 +135,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../compliance/compliance.html" class="nav-link">
+                    <a href="{{ route('admin.compliance') }}" class="nav-link {{ request()->routeIs('admin.compliance') ? 'active' : '' }}">
 
                         <i class="fas fa-clipboard-check"></i>
 
@@ -148,7 +147,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../kit-delivery/kit-delivery.html" class="nav-link">
+                    <a href="{{ route('admin.kit-delivery') }}" class="nav-link {{ request()->routeIs('admin.kit-delivery*') ? 'active' : '' }}">
 
                         <i class="fas fa-box-open"></i>
 
@@ -160,7 +159,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../subscription/subscriptions.html" class="nav-link">
+                    <a href="{{ route('admin.subscriptions') }}" class="nav-link {{ request()->routeIs('admin.subscriptions*') ? 'active' : '' }}">
 
                         <i class="fas fa-credit-card"></i>
 
@@ -172,7 +171,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../subscription_plan.html" class="nav-link">
+                    <a href="{{ route('admin.subscription-plans') }}" class="nav-link {{ request()->routeIs('admin.subscription-plans*') ? 'active' : '' }}">
 
                         <i class="fas fa-credit-card"></i>
 
@@ -184,7 +183,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../billing/billing.html" class="nav-link active">
+                    <a href="{{ route('admin.billing') }}" class="nav-link {{ request()->routeIs('admin.billing*') ? 'active' : '' }}">
 
                         <i class="fas fa-file-invoice-dollar"></i>
 
@@ -196,7 +195,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../reports.html" class="nav-link">
+                    <a href="{{ route('admin.reports') }}" class="nav-link {{ request()->routeIs('admin.reports') ? 'active' : '' }}">
 
                         <i class="fa-regular fa-file-lines"></i>
 
@@ -208,7 +207,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../partner-lab/partner-labs.html" class="nav-link">
+                    <a href="{{ route('admin.partner-labs') }}" class="nav-link {{ request()->routeIs('admin.partner-labs*') ? 'active' : '' }}">
 
                         <i class="fas fa-flask"></i>
 
@@ -220,7 +219,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../technician/technician.html" class="nav-link">
+                    <a href="{{ route('admin.technicians') }}" class="nav-link {{ request()->routeIs('admin.technicians*') ? 'active' : '' }}">
 
                         <i class="fas fa-user-cog"></i>
 
@@ -232,7 +231,7 @@
 
                 <li class="nav-item">
 
-                    <a href="../settings.html" class="nav-link">
+                    <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
 
                         <i class="fas fa-cog"></i>
 
@@ -288,9 +287,8 @@
 
                         <button class="nav-link profile-btn" id="profileBtn">
 
-                            <img src="../assets/images/profile-icon.png" alt="Admin" class="profile-avatar">
-
-                            <span class="profile-name d-none d-sm-inline">Admin</span>
+                            <img src="{{ asset('backend/images/profile-icon.png') }}" alt="Admin" class="profile-avatar">
+                            <span class="profile-name d-none d-sm-inline">{{ auth('admin')->user()->name }}</span>
 
                             <i class="fas fa-chevron-down"></i>
 
@@ -300,13 +298,13 @@
 
                         <div class="profile-dropdown" id="profileDropdown">
 
-                            <a href="profile.html" class="dropdown-item">
+                            <a href="{{ route('admin.profile') }}" class="dropdown-item">
 
                                 <i class="fas fa-user"></i> My Profile
 
                             </a>
 
-                            <a href="settings.html" class="dropdown-item">
+                            <a href="{{ route('admin.settings') }}" class="dropdown-item">
 
                                 <i class="fas fa-lock"></i> Change Password
 
@@ -314,11 +312,12 @@
 
                             <hr class="dropdown-divider">
 
-                            <a href="login.html" class="dropdown-item text-danger">
-
-                                <i class="fas fa-sign-out-alt"></i> Logout
-
-                            </a>
+                            <form method="POST" action="{{ route('admin.logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger border-0 bg-transparent w-100 text-start">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
 
                         </div>
 

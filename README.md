@@ -64,3 +64,29 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Wateryze dashboard
+
+Apply the account and user-dashboard schema before deploying the dashboard:
+
+```sh
+php artisan migrate
+```
+
+Public registration always creates a **User** account. Apply migrations to create the separate `admins` table and migrate any existing administrator logins. To bootstrap an administrator from an existing account, run this command on a trusted machine with access to the application database:
+
+```sh
+php artisan wateryze:promote-admin administrator@example.com
+```
+
+The command asks for confirmation; add `--force` only when intentionally skipping that prompt. Administrator credentials are stored in the separate `admins` table and sign in at `/admin/login`; `/admin` opens the administrator login or the dynamic index after sign-in. The source user login is disabled for that email, and administrators can manage customer accounts from `/admin/users`.
+
+Dashboard records belong to the signed-in account. Users can create and manage treatment sites, connect multiple public HTTPS JSON sensor APIs to a site, choose the water-quality parameters each API supplies, map each parameter to a JSON path, fetch readings, log chemical usage, create reminders, review alerts, update their profile/password, configure their own comparison thresholds, and export reading/audit CSV reports. API credentials are encrypted at rest. Redirects and private/local network destinations are blocked. Water readings are imported from configured APIs and cannot be manually entered or edited in the dashboard. Users can enter addresses and reuse locations already saved to their account; the address suggestions do not send addresses to a third-party service.
+
+Sensor APIs are fetched when a user requests a sync; background polling, arbitrary private-network device access, outbound email, and enterprise integrations are not enabled. Configure site-specific thresholds and consult the applicable regulator; dashboard comparisons do not provide regulatory certification.
+
+Run the feature and unit tests with:
+
+```sh
+php artisan test
+```

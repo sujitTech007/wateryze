@@ -6,7 +6,7 @@
 
     <!-- Custom JavaScript -->
 
-    <script src="../assets/js/script.js"></script>
+    <script src="{{ asset('public/backend/js/script.js') }}"></script>
 
 </body>
 

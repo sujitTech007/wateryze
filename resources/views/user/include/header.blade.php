@@ -18,7 +18,7 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('public/user/css/style.css?v=1.2') }}">
+    <link rel="stylesheet" href="{{ asset('public/user/css/style.css?v=2.0') }}">
 </head>
 
 <body>
@@ -46,7 +46,7 @@
                     </a>
                 </li>
                   <li class="nav-item">
-                    <a href="{{ route('user.water-monitoring') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.water-monitoring')])>
+                    <a href="{{ route('user.water-monitoring') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.water-monitoring*')])>
                         <i class="fas fa-tint"></i>
                         <span>Water Monitoring</span>
                     </a>
@@ -102,17 +102,26 @@
         <div class="main-content">
             <!-- ========== TOP NAVBAR START ========== -->
             <nav class="navbar justify-content-end">
-               
-
+                <div class="navbar-left">
+                    <button class="menu-toggle d-lg-none" id="menuToggle" type="button" aria-label="Open navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
                 <div class="navbar-right">
-                    <!-- Admin Profile Dropdown -->
+                    <a class="nav-link notification-btn" href="{{ route('user.notifications') }}" aria-label="Notifications">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                        @php($unreadNotifications = auth()->user()->dashboardNotifications()->whereNull('read_at')->whereNull('dismissed_at')->count())
+                        @if ($unreadNotifications > 0)
+                            <span class="notification-badge">{{ $unreadNotifications > 99 ? '99+' : $unreadNotifications }}</span>
+                        @endif
+                    </a>
                     <div class="nav-item profile-wrapper">
-                        <button class="nav-link profile-btn" id="profileBtn">
-                            <img src="{{ asset('public/front/images/profile-icon.png') }}" alt="" class="profile-avatar">
-                            <span class="profile-name d-none d-sm-inline">{{ auth()->user()->first_name }}</span>
-                            <i class="fas fa-chevron-down"></i>
+                        <button class="nav-link profile-btn" id="profileBtn" type="button" aria-expanded="false" aria-controls="profileDropdown">
+                            <span class="profile-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->first_name ?: auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->last_name ?? '', 0, 1)) }}</span>
+                            <span class="profile-name d-none d-sm-inline">{{ trim((auth()->user()->first_name ?: auth()->user()->name).' '.(auth()->user()->last_name ?? '')) }}</span>
+                            <span class="badge text-bg-light">{{ ucfirst(auth()->user()->role ?? 'user') }}</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
                         </button>
-                        <!-- Profile Dropdown Menu -->
                         <div class="profile-dropdown" id="profileDropdown">
                             <a href="{{ route('user.profile') }}" class="dropdown-item">
                                 <i class="fas fa-user"></i> My Profile

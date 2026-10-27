@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -25,6 +26,14 @@ class User extends Authenticatable
         'country_code',
         'phone_country',
         'phone',
+        'company',
+        'industry',
+        'address',
+        'city',
+        'province',
+        'postal_code',
+        'country',
+        'settings',
         'password',
     ];
 
@@ -48,7 +57,38 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'settings' => 'array',
         ];
+    }
+
+    public function sites(): HasMany
+    {
+        return $this->hasMany(Site::class);
+    }
+
+    public function waterReadings(): HasMany
+    {
+        return $this->hasMany(WaterReading::class);
+    }
+
+    public function chemicalUsages(): HasMany
+    {
+        return $this->hasMany(ChemicalUsage::class);
+    }
+
+    public function reminders(): HasMany
+    {
+        return $this->hasMany(Reminder::class);
+    }
+
+    public function dashboardNotifications(): HasMany
+    {
+        return $this->hasMany(DashboardNotification::class);
+    }
+
+    public function sensorApiConnections(): HasMany
+    {
+        return $this->hasMany(SensorApiConnection::class);
     }
 
     protected function fullPhone(): Attribute

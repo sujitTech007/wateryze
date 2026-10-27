@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +18,7 @@ class AuthTest extends TestCase
             'first_name' => 'Taylor',
             'last_name' => 'Example',
             'email' => '  TAYLOR@example.com ',
+            'role' => 'admin',
             'country_code' => '+1',
             'phone_country' => 'ca',
             'phone' => '(555) 123-4567',
@@ -29,7 +31,8 @@ class AuthTest extends TestCase
         $user = User::where('email', 'taylor@example.com')->firstOrFail();
 
         $this->assertAuthenticatedAs($user);
-        $this->assertNull($user->name);
+        $this->assertSame('user', $user->role);
+        $this->assertSame('Taylor Example', $user->name);
         $this->assertSame('Taylor', $user->first_name);
         $this->assertSame('Example', $user->last_name);
         $this->assertSame('+1', $user->country_code);
@@ -57,6 +60,7 @@ class AuthTest extends TestCase
         $routes = [
             'user.dashboard',
             'user.water-monitoring',
+            'user.water-monitoring.apis.create',
             'user.chemical-kits.index',
             'user.chemical-kits.create',
             'user.compliance',
@@ -64,7 +68,6 @@ class AuthTest extends TestCase
             'user.schedule',
             'user.reports.index',
             'user.reports.view',
-            'user.reports.edit',
             'user.site-locations',
             'user.notifications',
             'user.profile',
@@ -126,7 +129,7 @@ class AuthTest extends TestCase
             'password' => Hash::make('correct-password'),
         ]);
 
-        $this->post(route('login.store'), [
+        $this->from(route('login'))->post(route('login.store'), [
             'email' => ' MEMBER@example.com ',
             'password' => 'correct-password',
             'remember' => '1',
@@ -175,5 +178,39 @@ class AuthTest extends TestCase
             ->assertRedirect(route('home'));
         $this->post(route('signup.store'), [])
             ->assertRedirect(route('home'));
+    }
+
+    public function test_admin_has_a_separate_login_table_guard_and_dashboard(): void
+    {
+        $admin = Admin::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => Hash::make('admin-password-123'),
+        ]);
+
+        $this->get('/admin')->assertRedirect(route('admin.login'));
+        $this->get(route('admin.login'))
+            ->assertOk()
+            ->assertSee('action="'.route('admin.login.store').'"', false)
+            ->assertSee('name="email"', false)
+            ->assertSee('name="password"', false);
+
+        $this->from(route('login'))->post(route('login.store'), [
+            'email' => $admin->email,
+            'password' => 'admin-password-123',
+        ])->assertRedirect(route('login'))
+            ->assertSessionHasErrors('email');
+
+        $this->post(route('admin.login.store'), [
+            'email' => ' ADMIN@example.com ',
+            'password' => 'admin-password-123',
+        ])->assertRedirect(route('admin.index'));
+
+        $this->assertAuthenticatedAs($admin, 'admin');
+        $this->get('/admin')->assertOk()->assertViewIs('admin.index');
+        $this->get(route('admin.dashboard'))->assertRedirect(route('admin.index'));
+        $this->assertGuest('web');
+
+        $this->post(route('admin.logout'))->assertRedirect(route('admin.login'));
+        $this->assertGuest('admin');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,12 +29,14 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Admin::where('email', $credentials['email'])->exists()
+            || ! Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
             return back()
                 ->withErrors(['email' => 'These credentials do not match our records.'])
                 ->onlyInput('email');
         }
 
+        Auth::guard('admin')->logout();
         $request->session()->regenerate();
         $request->session()->flash('status', 'You are now signed in.');
 
@@ -54,7 +57,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email', 'unique:admins,email'],
             'country_code' => ['required', 'string', 'regex:/^\+[1-9][0-9]{0,2}$/'],
             'phone_country' => ['nullable', 'string', 'regex:/^[a-z]{2}$/'],
             'phone' => ['required', 'string', 'max:25', 'regex:/^(?=(?:\D*\d){4,15}$)[0-9().\-\s]+$/'],
@@ -63,6 +66,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
+            'name' => $validated['first_name'].' '.$validated['last_name'],
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
@@ -72,6 +76,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
+        Auth::guard('admin')->logout();
         Auth::login($user);
         $request->session()->regenerate();
         $request->session()->flash('status', 'Your account has been created successfully.');

@@ -1,0 +1,12 @@
+<form action="{{ $usage ? route('user.chemical-kits.update', $usage) : route('user.chemical-kits.store') }}" method="POST" class="row g-3">
+    @csrf
+    @if ($usage) @method('PUT') @endif
+    <div class="col-md-6"><label class="form-label">Site <span class="text-danger">*</span></label><select class="form-select" name="site_id" required><option value="">Select your site</option>@foreach ($sites as $site)<option value="{{ $site->id }}" @selected((string)old('site_id', $usage?->site_id) === (string)$site->id)>{{ $site->name }}</option>@endforeach</select></div>
+    <div class="col-md-6"><label class="form-label">Chemical name <span class="text-danger">*</span></label><input class="form-control" name="chemical_name" maxlength="120" value="{{ old('chemical_name', $usage?->chemical_name) }}" required></div>
+    <div class="col-md-4"><label class="form-label">Date used <span class="text-danger">*</span></label><input class="form-control" type="date" name="usage_date" max="{{ now()->toDateString() }}" value="{{ old('usage_date', $usage?->usage_date?->toDateString() ?? now()->toDateString()) }}" required></div>
+    <div class="col-md-4"><label class="form-label">Quantity <span class="text-danger">*</span></label><input class="form-control" type="number" step="any" min="0.001" name="quantity" value="{{ old('quantity', $usage?->quantity) }}" required></div>
+    <div class="col-md-4"><label class="form-label">Unit <span class="text-danger">*</span></label><select class="form-select" name="unit" required><option value="">Select unit</option>@foreach (['L', 'mL', 'kg', 'g', 'mg', 'gal', 'lb'] as $unit)<option value="{{ $unit }}" @selected(old('unit', $usage?->unit) === $unit)>{{ $unit }}</option>@endforeach</select></div>
+    <div class="col-md-6"><label class="form-label">Purpose <span class="text-danger">*</span></label><input class="form-control" name="purpose" maxlength="120" list="chemical-purposes" value="{{ old('purpose', $usage?->purpose) }}" required><datalist id="chemical-purposes"><option value="Water treatment"><option value="pH adjustment"><option value="Cleaning"><option value="Odour control"><option value="Regular maintenance"></datalist></div>
+    <div class="col-12"><label class="form-label">Notes</label><textarea class="form-control" rows="2" name="notes" maxlength="5000">{{ old('notes', $usage?->notes) }}</textarea></div>
+    <div class="col-12"><button class="btn btn-primary" type="submit">{{ $usage ? 'Save changes' : 'Save usage' }}</button></div>
+</form>
