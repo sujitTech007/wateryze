@@ -44,7 +44,7 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="{{ asset('public/front/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/user/css/style.css') }}">
     
 
 </head>
