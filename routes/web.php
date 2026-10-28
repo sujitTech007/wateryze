@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAccountController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminOperationsController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserDashboardController;
@@ -88,19 +89,25 @@ Route::prefix('user')
         Route::put('/settings/password', 'updatePassword')->name('settings.password');
     });
 
-Route::prefix('admin')->name('admin.')->middleware('auth:admin')->controller(AdminDashboardController::class)->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/dashboard', 'dashboard')->name('dashboard');
-    Route::get('/users', 'users')->name('users.index');
-    Route::get('/users/create', 'createUser')->name('users.create');
-    Route::post('/users', 'storeUser')->name('users.store');
-    Route::get('/users/{user}/edit', 'editUser')->name('users.edit');
-    Route::put('/users/{user}', 'updateUser')->name('users.update');
-    Route::delete('/users/{user}', 'deleteUser')->name('users.destroy');
-    Route::get('/water-usage', 'waterUsage')->name('water-usage');
-    Route::get('/chemical-usage', 'chemicalUsage')->name('chemical-usage');
-    Route::get('/compliance', 'compliance')->name('compliance');
-    Route::get('/reports', 'reports')->name('reports');
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::controller(AdminDashboardController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/dashboard', 'dashboard')->name('dashboard');
+        Route::get('/water-usage', 'waterUsage')->name('water-usage');
+        Route::get('/chemical-usage', 'chemicalUsage')->name('chemical-usage');
+        Route::get('/compliance', 'compliance')->name('compliance');
+        Route::get('/reports', 'reports')->name('reports');
+    });
+
+    Route::controller(AdminUserController::class)->prefix('users')->name('users.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{user}/edit', 'edit')->whereNumber('user')->name('edit');
+        Route::get('/{user}', 'show')->whereNumber('user')->name('show');
+        Route::put('/{user}', 'update')->whereNumber('user')->name('update');
+        Route::delete('/{user}', 'destroy')->whereNumber('user')->name('destroy');
+    });
 });
 
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {

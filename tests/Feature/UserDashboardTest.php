@@ -619,9 +619,50 @@ class UserDashboardTest extends TestCase
         $this->actingAs($administrator, 'admin')
             ->get(route('admin.users.index'))
             ->assertOk()
+            ->assertViewIs('admin.user.index')
+            ->assertSee($user->email)
+            ->assertDontSee($administrator->email);
+        $this->get(route('admin.users.create'))
+            ->assertOk()
+            ->assertViewIs('admin.user.create')
+            ->assertSee('intlTelInput')
+            ->assertSee('name="phone_country"', false);
+        $this->get(route('admin.users.edit', $user))->assertOk()->assertViewIs('admin.user.edit');
+        $this->get(route('admin.users.show', $user))
+            ->assertOk()
+            ->assertViewIs('admin.user.view')
+            ->assertSee($user->email)
+            ->assertSee('Customer data');
+        $this->get(route('admin.users.index', ['search' => $user->email]))
+            ->assertOk()
             ->assertSee($user->email);
-        $this->get(route('admin.users.create'))->assertOk();
-        $this->get(route('admin.users.edit', $user))->assertOk();
+        $this->get(route('admin.users.index', ['search' => 'no-such-customer@example.test']))
+            ->assertOk()
+            ->assertSee('No matching customer accounts found.');
+
+        $this->put(route('admin.users.update', $user), [
+            'first_name' => 'Updated',
+            'last_name' => 'Customer',
+            'email' => $user->email,
+            'company' => 'Wateryze Customer',
+            'country_code' => '+1',
+            'phone_country' => 'ca',
+            'phone' => '4165550123',
+            'address' => '123 Water Street',
+            'city' => 'Toronto',
+            'province' => 'Ontario',
+            'postal_code' => 'M5V 2T6',
+            'country' => 'Canada',
+            'role' => 'admin',
+        ])->assertRedirect(route('admin.users.index'))
+            ->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'phone_country' => 'ca',
+            'country_code' => '+1',
+            'address' => '123 Water Street',
+        ]);
+        $this->assertSame('user', $user->fresh()->role);
 
         $this->put(route('admin.users.update', $user), [
             'first_name' => 'Updated',
@@ -633,8 +674,66 @@ class UserDashboardTest extends TestCase
             ->assertSessionHasNoErrors();
         $this->assertSame('user', $user->fresh()->role);
 
+        $this->post(route('admin.users.store'), [
+            'first_name' => 'Bad',
+            'last_name' => 'Phone',
+            'email' => 'bad-phone@example.test',
+            'phone' => '4165550123',
+            'password' => 'A-new-strong-password-123',
+            'password_confirmation' => 'A-new-strong-password-123',
+        ])->assertSessionHasErrors(['country_code', 'phone_country']);
+
+        $this->post(route('admin.users.store'), [
+            'first_name' => 'Taken',
+            'last_name' => 'Admin Email',
+            'email' => $administrator->email,
+            'password' => 'A-new-strong-password-123',
+            'password_confirmation' => 'A-new-strong-password-123',
+        ])->assertSessionHasErrors('email');
+
+        $this->post(route('admin.users.store'), [
+            'first_name' => 'New',
+            'last_name' => 'Customer',
+            'email' => 'new-customer@example.test',
+            'country_code' => '+1',
+            'phone_country' => 'ca',
+            'phone' => '4165550101',
+            'password' => 'A-new-strong-password-123',
+            'password_confirmation' => 'A-new-strong-password-123',
+        ])->assertRedirect(route('admin.users.index'))
+            ->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('users', [
+            'email' => 'new-customer@example.test',
+            'role' => 'user',
+            'country_code' => '+1',
+            'phone_country' => 'ca',
+        ]);
+
         $this->delete(route('admin.users.destroy', $user->fresh()))->assertRedirect(route('admin.users.index'));
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    public function test_admin_user_crud_cannot_view_modify_or_delete_an_administrator_account(): void
+    {
+        $administrator = Admin::factory()->create();
+        $legacyAdmin = User::factory()->create([
+            'email' => 'legacy-admin@example.test',
+            'role' => 'admin',
+        ]);
+        $this->actingAs($administrator, 'admin');
+
+        $this->get(route('admin.users.show', $legacyAdmin))->assertNotFound();
+        $this->get(route('admin.users.edit', $legacyAdmin))->assertNotFound();
+        $this->put(route('admin.users.update', $legacyAdmin), [
+            'first_name' => 'Changed',
+            'last_name' => 'Admin',
+            'email' => $legacyAdmin->email,
+        ])->assertNotFound();
+        $this->delete(route('admin.users.destroy', $legacyAdmin))->assertNotFound();
+        $this->assertDatabaseHas('users', [
+            'id' => $legacyAdmin->id,
+            'role' => 'admin',
+        ]);
     }
 
     public function test_admin_navigation_routes_render_without_missing_pages(): void
