@@ -56,15 +56,15 @@
                     </div>
                     <div class="col-12">
                         <h3 class="h6 mt-2">Notifications</h3>
-                        <div class="form-check">
+                        <div class="form-check mb-2">
                             <input type="hidden" name="email_notifications" value="0">
                             <input class="form-check-input" id="email_notifications" name="email_notifications" type="checkbox" value="1" @checked(old('email_notifications', $settings->email_notifications))>
-                            <label class="form-check-label" for="email_notifications">Email notifications</label>
+                            <label class="form-check-label p-1" for="email_notifications">Email notifications</label>
                         </div>
                         <div class="form-check">
                             <input type="hidden" name="sms_notifications" value="0">
                             <input class="form-check-input" id="sms_notifications" name="sms_notifications" type="checkbox" value="1" @checked(old('sms_notifications', $settings->sms_notifications))>
-                            <label class="form-check-label" for="sms_notifications">SMS notifications</label>
+                            <label class="form-check-label p-1" for="sms_notifications">SMS notifications</label>
                         </div>
                     </div>
                 </div>

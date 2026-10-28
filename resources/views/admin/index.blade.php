@@ -10,7 +10,7 @@
                     <div class="row g-4"> <!-- Total Users Card -->
                         <div class="col-lg-3 col-md-6 mb-3">
                             <div
-                                class="card stat-card bg-primary-subtle border border-primary-subtle shadow rounded-3">
+                                class="card stat-card bg-primary-subtle border border-primary-subtle shadow rounded-3 h-100">
                                 <div class="card-body">
                                     <div class="stat-icon bg-primary"> <i class="fas fa-users"></i> </div>
                                     <div class="stat-content">
@@ -21,7 +21,7 @@
                             </div>
                         </div> <!-- Total Water Consumption Card -->
                         <div class="col-lg-3 col-md-6 mb-3">
-                            <div class="card stat-card bg-info-subtle border border-info-subtle shadow rounded-3">
+                            <div class="card stat-card bg-info-subtle border border-info-subtle shadow rounded-3 h-100">
                                 <div class="card-body">
                                     <div class="stat-icon bg-info"> <i class="fas fa-droplet"></i> </div>
                                     <div class="stat-content">
@@ -33,7 +33,7 @@
                         </div> <!-- Active Connections Card -->
                         <div class="col-lg-3 col-md-6 mb-3">
                             <div
-                                class="card stat-card bg-success-subtle border border-success-subtle shadow rounded-3">
+                                class="card stat-card bg-success-subtle border border-success-subtle shadow rounded-3 h-100">
                                 <div class="card-body">
                                     <div class="stat-icon bg-success"> <i class="fas fa-plug"></i> </div>
                                     <div class="stat-content">
@@ -45,7 +45,7 @@
                         </div> <!-- Today's Usage Card -->
                         <div class="col-lg-3 col-md-6 mb-3">
                             <div
-                                class="card stat-card bg-warning-subtle border border-warning-subtle shadow rounded-3">
+                                class="card stat-card bg-warning-subtle border border-warning-subtle shadow rounded-3 h-100">
                                 <div class="card-body">
                                     <div class="stat-icon bg-warning"> <i class="fas fa-chart-pie"></i> </div>
                                     <div class="stat-content">

@@ -7,6 +7,11 @@
     <!-- Custom JavaScript -->
 
     <script src="{{ asset('public/backend/js/script.js') }}"></script>
+  
+
+
+
+
 
 </body>
 

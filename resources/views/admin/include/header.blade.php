@@ -283,45 +283,56 @@
 
                     <!-- Admin Profile Dropdown -->
 
-                    <div class="nav-item profile-wrapper">
+   
+<div class="nav-item dropdown profile-wrapper">
 
-                        <button class="nav-link profile-btn" id="profileBtn">
+    <button type="button"
+            class="nav-link profile-btn"
+            id="profileBtn"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
 
-                            <img src="{{ asset('backend/images/profile-icon.png') }}" alt="Admin" class="profile-avatar">
-                            <span class="profile-name d-none d-sm-inline">{{ auth('admin')->user()->name }}</span>
+        <img src="{{ asset('backend/images/profile-icon.png') }}"
+             alt="Admin"
+             class="profile-avatar">
 
-                            <i class="fas fa-chevron-down"></i>
+        <span class="profile-name d-none d-sm-inline">
+            {{ auth('admin')->user()->name }}
+        </span>
 
-                        </button>
+        <i class="fas fa-chevron-down ms-1"></i>
+    </button>
 
-                        <!-- Profile Dropdown Menu -->
+    <ul class="dropdown-menu dropdown-menu-end"
+        id="profileDropdown"
+        aria-labelledby="profileBtn">
 
-                        <div class="profile-dropdown" id="profileDropdown">
+        <li>
+            <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                <i class="fas fa-user me-2"></i> My Profile
+            </a>
+        </li>
 
-                            <a href="{{ route('admin.profile') }}" class="dropdown-item">
+        <li>
+            <a href="{{ route('admin.settings') }}" class="dropdown-item">
+                <i class="fas fa-lock me-2"></i> Change Password
+            </a>
+        </li>
 
-                                <i class="fas fa-user"></i> My Profile
+        <li><hr class="dropdown-divider"></li>
 
-                            </a>
+        <li>
+            <form method="POST" action="{{ route('admin.logout') }}">
+                @csrf
+                <button type="submit" class="dropdown-item text-danger">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
 
-                            <a href="{{ route('admin.settings') }}" class="dropdown-item">
 
-                                <i class="fas fa-lock"></i> Change Password
-
-                            </a>
-
-                            <hr class="dropdown-divider">
-
-                            <form method="POST" action="{{ route('admin.logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger border-0 bg-transparent w-100 text-start">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </button>
-                            </form>
-
-                        </div>
-
-                    </div>
 
                 </div>
 
