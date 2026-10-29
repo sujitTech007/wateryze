@@ -63,13 +63,13 @@
                         <span>Chemical Kit Usage</span>
                     </a>
                 </li>
-                <li class="nav-item">
+               {{-- <li class="nav-item">
                     <a href="{{ route('user.compliance') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.compliance', 'user.audit-report')])>
                         <i class="fas fa-shield-alt"></i>
                         <span>Compliance
 </span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a href="{{ route('user.schedule') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.schedule')])>
                         <i class="fas fa-clock"></i>
@@ -92,6 +92,12 @@
                     <a href="{{ route('user.notifications') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.notifications')])>
                         <i class="fas fa-bell"></i>
                         <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('user.profile') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.profile')])>
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
                     </a>
                 </li>
                 <li class="nav-item">

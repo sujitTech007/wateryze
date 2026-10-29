@@ -97,6 +97,10 @@ class AdminOperationsTest extends TestCase
             'subscription_plan_id' => $plan->id,
             'amount' => '29.95',
         ]);
+        $this->get(route('admin.subscriptions'))
+            ->assertOk()
+            ->assertDontSee(route('admin.subscriptions.create'), false)
+            ->assertDontSee('Create subscription');
 
         $this->post(route('admin.partner-labs.store'), [
             'lab_name' => 'Quality Lab',
