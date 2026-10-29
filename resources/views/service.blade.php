@@ -183,14 +183,13 @@
     </section>
     <!-- service-section end -->
 
-
-    <!-- testimonial-section  -->
+ <!-- testimonial-section  -->
     <section class="testimonial-section">
         <div class="auto-container">
             <div class="top-title clearfix">
                 <div class="title-inner">
                     <div class="sec-title">
-                        <h3>Our Testimonials</h3>
+                        <h1>Our Testimonials</h1>
                     </div>
                 </div>
                 <div class="text-inner">
