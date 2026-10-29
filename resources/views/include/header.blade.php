@@ -131,7 +131,8 @@
                 <div class="header-buttons">
 
                     @auth
-                        <span class="me-2">{{ auth()->user()->first_name }}</span>
+                        
+                        <a href="{{ route('user.dashboard') }}" class="btn btn-login"><span class="me-2">{{ auth()->user()->first_name }}</span></a>
                         <form action="{{ route('logout') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-login">Logout</button>

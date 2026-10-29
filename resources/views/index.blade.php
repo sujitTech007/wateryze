@@ -33,7 +33,7 @@
                 <!-- RIGHT IMAGE -->
                 <div class="col-lg-6 col-md-12 text-center">
                     <div class="hero-image">
-                        <img src="images/side-img.png" alt="Smart Water">
+                        <img src="{{ asset('public/front/images/side-img.png') }}" alt="Smart Water">
                     </div>
                 </div>
 
@@ -115,114 +115,69 @@
 
           <h1>Choose Your <span>Plan</span></h1>
 
-          <p>
-            Get the right tools and features to manage your water business
-            <br class="d-none d-md-block" />
-            smarter, faster and more efficiently.
-          </p>
-
-          <!-- Monthly / Yearly -->
-          <!-- <div class="pricing-toggle">
-                    <button class="active">Monthly</button>
-                    <button>Yearly</button>
-                </div> -->
+          <p>Plans are billed in CAD. No tax is calculated or added at checkout.</p>
         </div>
+
+        @if (session('status'))
+          <div class="alert alert-success" role="status">{{ session('status') }}</div>
+        @endif
+        @if ($errors->any())
+          <div class="alert alert-danger" role="alert">
+            <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+          </div>
+        @endif
 
         <!-- Pricing Cards -->
         <div class="pricing-wrapper">
-          <!-- Starter Plan -->
-          <div class="pricing-card">
-            <div class="plan-icon">
-              <img src="images/bottle_2.png" alt="Water" />
-            </div>
+          @forelse ($plans as $plan)
+            <article class="pricing-card {{ $plan->name === 'Premium' ? 'popular' : '' }}">
+              @if ($plan->name === 'Premium')
+                <div class="popular-badge">★ &nbsp; PREMIUM</div>
+              @endif
+              <div class="plan-icon">
+                <img src="{{ asset('public/front/images/bottle_2.png') }}" alt="">
+              </div>
 
-            <h2>Starter Plan</h2>
+              <h2>{{ $plan->name }}</h2>
+              @if ($plan->description)
+                <p>{{ $plan->description }}</p>
+              @endif
+              <div class="price">
+                <strong>CAD {{ number_format((float) $plan->amount, 2) }}</strong>
+                <span>/ {{ $plan->billing_cycle === 'yearly' ? 'year' : ($plan->billing_cycle === 'quarterly' ? 'quarter' : 'month') }}</span>
+              </div>
 
-            <div class="price">
-              <strong>CAD 249</strong>
-              <span>/ month</span>
-            </div>
+              <ul class="pricing-list">
+                @foreach ($plan->features ?? [] as $feature)
+                  <li><span class="check">✓</span><span>{{ $feature }}</span></li>
+                @endforeach
+                @if ($plan->water_monitoring_enabled)
+                  <li><span class="check">✓</span><span>Premium water monitoring access</span></li>
+                @endif
+              </ul>
 
-            <ul class="pricing-list">
-              <li>
-                <span class="check">✓</span>
-                <span>Chemical kit support</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Compliance checklist</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Certified service access</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Equipment health checklist</span>
-              </li>
-              <li>
-                <span class="check">✓</span>
-                <span>Monthly water quality assessment</span>
-              </li>
-            </ul>
-
-            <a href="{{ route('subscription') }}" class="pricing-btn">
-              START NOW
-              <span>→</span>
-            </a>
-          </div>
-
-          <!-- Pro Plan -->
-          <div class="pricing-card popular">
-            <div class="popular-badge">★ &nbsp; MOST POPULAR</div>
-
-            <div class="plan-icon">
-              <img src="images/bottle_2.png" alt="Water" />
-            </div>
-
-            <h2>Pro Plan</h2>
-
-            <div class="price">
-              <strong>CAD 499</strong>
-              <span>/ month</span>
-            </div>
-
-            <ul class="pricing-list">
-              <li>
-                <span class="check">✓</span>
-                <span>Sensor integration</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Water quality monitoring dashboard</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Compliance alerts &amp; notifications</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>ESG audit reports</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Multi-site dashboard</span>
-              </li>
-            </ul>
-
-            <a href="{{ route('subscription') }}" class="pricing-btn">
-              START NOW
-              <span>→</span>
-            </a>
-          </div>
+              @auth
+                <form method="POST" action="{{ route('user.subscription.checkout', $plan) }}">
+                  @csrf
+                  <button class="pricing-btn" type="submit">
+                    Purchase {{ $plan->name }}
+                    <span>→</span>
+                  </button>
+                </form>
+              @else
+                <a href="{{ route('signup', ['plan_id' => $plan->id]) }}" class="pricing-btn">
+                  Sign up to purchase
+                  <span>→</span>
+                </a>
+              @endauth
+            </article>
+          @empty
+            <div class="alert alert-info w-100">There are no subscription plans available at this time.</div>
+          @endforelse
         </div>
+        <p class="text-muted text-center mt-4">
+          Payments are processed by Stripe. A subscription is activated only after Stripe confirms payment.
+        </p>
       </div>
     </section>
     <!-- delivery-section end -->
@@ -236,7 +191,7 @@
                 <div id="video_block_one">
                     <div class="video-inner">
                         <div class="video-box wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms"
-                            style="background-image: url(images/video-img-01.png);">
+                            style="background-image: url(public/front/images/video-img-01.png);">
                             <div class="video-btn">
                                 <a href="https://www.youtube.com/watch?v=nfP5N9Yc72A&amp;t=28s" class="lightbox-image"
                                     data-caption=""><i class="fa fa-play-circle"></i></a>
@@ -260,18 +215,18 @@
                 <div class="row clearfix">
                     <div class="col-lg-4 col-md-6 col-sm-12 image-column">
                         <figure class="image-box wow flipInY" data-wow-delay="00ms" data-wow-duration="1500ms"><a
-                                href="images/video-img-3.png" class="lightbox-image" data-fancybox="gallery"><img
-                                    src="images/video-img-3.png" alt=""></a></figure>
+                                href="{{ asset('public/front/images/video-img-3.png') }}" class="lightbox-image" data-fancybox="gallery"><img
+                                    src="{{ asset('public/front/images/video-img-3.png') }}" alt=""></a></figure>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 image-column">
                         <figure class="image-box wow flipInY" data-wow-delay="300ms" data-wow-duration="1500ms"><a
-                                href="images/video_2.jpg" class="lightbox-image" data-fancybox="gallery"><img
-                                    src="images/video_1.jpg" alt=""></a></figure>
+                                href="{{ asset('public/front/images/video_2.jpg') }}" class="lightbox-image" data-fancybox="gallery"><img
+                                    src="{{ asset('public/front/images/video_1.jpg') }}" alt=""></a></figure>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 image-column">
                         <figure class="image-box wow flipInY" data-wow-delay="600ms" data-wow-duration="1500ms"><a
-                                href="images/video_3.jpg" class="lightbox-image" data-fancybox="gallery"><img
-                                    src="images/video_3.jpg" alt=""></a></figure>
+                                href="{{ asset('public/front/images/video_3.jpg') }}" class="lightbox-image" data-fancybox="gallery"><img
+                                    src="{{ asset('public/front/images/video_3.jpg') }}" alt=""></a></figure>
                     </div>
                 </div>
             </div>
@@ -283,8 +238,8 @@
     <!-- composition-section -->
     <section class="composition-section bg-color-1">
         <div class="border-shap">
-            <div class="border-1" style="background-image: url(images/border-1.png);"></div>
-            <div class="border-2" style="background-image: url(images/border-2.png);"></div>
+            <div class="border-1" style="background-image: url({{ asset('public/front/images/border-1.png') }});"></div>
+            <div class="border-2" style="background-image: url({{ asset('public/front/images/border-2.png') }});"></div>
         </div>
         <div class="auto-container">
             <div class="sec-title text-center">
@@ -297,7 +252,7 @@
                             <div class="single-item wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
                                 <figure class="icon-box">
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
                                 </figure>
                                 <h3>Avoid regulatory fines</h3>
 
@@ -307,7 +262,7 @@
                             <div class="single-item wow slideInLeft" data-wow-delay="300ms" data-wow-duration="1500ms">
                                 <figure class="icon-box">
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
                                 </figure>
                                 <h3>Reduce chemical <br>waste & impact</h3>
 
@@ -318,9 +273,9 @@
                     </div>
                     <div class="col-lg-4 col-md-12 col-sm-12 image-column">
                         <div class="image-box">
-                            <div class="pattern-bg" style="background-image: url(images/icons/pattern-2.png);"></div>
+                            <div class="pattern-bg" style="background-image: url({{ asset('public/front/images/icons/pattern-2.png') }});"></div>
                             <figure class="image wow slideInUp" data-wow-delay="0ms" data-wow-duration="1500ms"><img
-                                    src="images/water_glass_1.png" alt="" style="width: 215px; margin-bottom: 20px;">
+                                    src="{{ asset('public/front/images/water_glass_1.png') }}" alt="" style="width: 215px; margin-bottom: 20px;">
                             </figure>
                         </div>
                     </div>
@@ -329,7 +284,7 @@
                             <div class="single-item wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
                                 <figure class="icon-box">
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
                                 </figure>
                                 <h3>Save time with automated reporting</h3>
 
@@ -339,7 +294,7 @@
                             <div class="single-item wow slideInRight" data-wow-delay="300ms" data-wow-duration="1500ms">
                                 <figure class="icon-box">
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
                                 </figure>
                                 <h3>Affordable subscription model</h3>
 
@@ -365,7 +320,7 @@
 
             <!-- LEFT IMAGE -->
             <div class="col-lg-6 wz-compliance-image">
-                <img src="images/side-img-02.png"
+                <img src="{{ asset('public/front/images/side-img-02.png') }}"
                      alt="Wastewater Compliance"
                      class="img-fluid">
             </div>
@@ -492,13 +447,13 @@
                 <div class="client-thumb-outer">
                     <div class="client-thumbs-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_1.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_1.png') }}" alt=""></figure>
                         </div>
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_2.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_2.png') }}" alt=""></figure>
                         </div>
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_3.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_3.png') }}" alt=""></figure>
                         </div>
                     </div>
                 </div>

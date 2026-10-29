@@ -4,7 +4,7 @@
 
         <div class="page-title-bg">
 
-            <img src="images/water_bg.jpg" alt="">
+            <img src="{{ asset('public/front/images/water_bg.jpg') }}" alt="">
 
         </div>
 
@@ -26,7 +26,7 @@
 
         <div class="page-title-wave">
 
-            <img src="images/wave.png" alt="wave">
+            <img src="{{ asset('public/front/images/wave.png') }}" alt="wave">
 
         </div>
 
@@ -66,7 +66,7 @@
 
                     <div class="icon">
 
-                        <img src="images/vector-1.png" alt="">
+                        <img src="{{ asset('public/front/images/vector-1.png') }}" alt="">
 
                     </div>
 
@@ -90,7 +90,7 @@
 
                     <div class="icon">
 
-                        <img src="images/vector_2.png" alt="">
+                        <img src="{{ asset('public/front/images/vector_2.png') }}" alt="">
 
                     </div>
 
@@ -114,7 +114,7 @@
 
                     <div class="icon">
 
-                        <img src="images/vector-3.png" alt="">
+                        <img src="{{ asset('public/front/images/vector-3.png') }}" alt="">
 
                     </div>
 
@@ -136,7 +136,7 @@
 
                     <div class="icon">
 
-                        <img src="images/container.png" alt="">
+                        <img src="{{ asset('public/front/images/container.png') }}" alt="">
 
                     </div>
 
@@ -180,7 +180,7 @@
 
                         <div class="video-box wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms"
 
-                            style="background-image: url(images/video-img-01.png);">
+                            style="background-image: url({{ asset('public/front/images/video-img-01.png') }});">
 
                             <div class="video-btn">
 
@@ -228,9 +228,9 @@
 
                         <figure class="image-box wow flipInY" data-wow-delay="00ms" data-wow-duration="1500ms"><a
 
-                                href="images/video_1.jpg" class="lightbox-image" data-fancybox="gallery"><img
+                                href="{{ asset('public/front/images/video_1.jpg') }}" class="lightbox-image" data-fancybox="gallery"><img
 
-                                    src="images/video-img-3.png" alt=""></a></figure>
+                                    src="{{ asset('public/front/images/video-img-3.png') }}" alt=""></a></figure>
 
                     </div>
 
@@ -238,9 +238,9 @@
 
                         <figure class="image-box wow flipInY" data-wow-delay="300ms" data-wow-duration="1500ms"><a
 
-                                href="images/video_2.jpg" class="lightbox-image" data-fancybox="gallery"><img
+                                href="{{ asset('public/front/images/video_2.jpg') }}" class="lightbox-image" data-fancybox="gallery"><img
 
-                                    src="images/video_1.jpg" alt=""></a></figure>
+                                    src="{{ asset('public/front/images/video_1.jpg') }}" alt=""></a></figure>
 
                     </div>
 
@@ -248,9 +248,9 @@
 
                         <figure class="image-box wow flipInY" data-wow-delay="600ms" data-wow-duration="1500ms"><a
 
-                                href="images/video_3.jpg" class="lightbox-image" data-fancybox="gallery"><img
+                                href="{{ asset('public/front/images/video_3.jpg') }}" class="lightbox-image" data-fancybox="gallery"><img
 
-                                    src="images/video_3.jpg" alt=""></a></figure>
+                                    src="{{ asset('public/front/images/video_3.jpg') }}" alt=""></a></figure>
 
                     </div>
 
@@ -362,11 +362,11 @@
 
     <section class="filtration-process bg-color-2">
 
-        <div class="bg-pattern" style="background-image: url(images/icons/pattern-3.png);"></div>
+        <div class="bg-pattern" style="background-image: url({{ asset('public/front/images/icons/pattern-3.png') }});"></div>
 
         <div class="border-shap">
 
-            <div class="border-1" style="background-image: url(images/icons/border-5.png);"></div>
+            <div class="border-1" style="background-image: url({{ asset('public/front/images/icons/border-5.png') }});"></div>
 
         </div>
 
@@ -408,13 +408,13 @@
 
                                 <!-- Background shape image -->
 
-                                <img src="images/icon-bg.png" class="icon-bg" alt="bg">
+                                <img src="{{ asset('public/front/images/icon-bg.png') }}" class="icon-bg" alt="bg">
 
 
 
                                 <!-- Foreground icon image -->
 
-                                <img src="images/icon-white.png" class="icon-foreground" alt="icon">
+                                <img src="{{ asset('public/front/images/icon-white.png') }}" class="icon-foreground" alt="icon">
 
                             </div>
 
@@ -442,13 +442,13 @@
 
                                 <!-- Background shape image -->
 
-                                <img src="images/icon-bg.png" class="icon-bg" alt="bg">
+                                <img src="{{ asset('public/front/images/icon-bg.png') }}" class="icon-bg" alt="bg">
 
 
 
                                 <!-- Foreground icon image -->
 
-                                <img src="images/icon-white_2.png" class="icon-foreground" alt="icon">
+                                <img src="{{ asset('public/front/images/icon-white_2.png') }}" class="icon-foreground" alt="icon">
 
                             </div>
 
@@ -474,13 +474,13 @@
 
                                 <!-- Background shape image -->
 
-                                <img src="images/icon-bg.png" class="icon-bg" alt="bg">
+                                <img src="{{ asset('public/front/images/icon-bg.png') }}" class="icon-bg" alt="bg">
 
 
 
                                 <!-- Foreground icon image -->
 
-                                <img src="images/icon-white_3.png" class="icon-foreground" alt="icon">
+                                <img src="{{ asset('public/front/images/icon-white_3.png') }}" class="icon-foreground" alt="icon">
 
                             </div>
 
@@ -506,13 +506,13 @@
 
                                 <!-- Background shape image -->
 
-                                <img src="images/icon-bg.png" class="icon-bg" alt="bg">
+                                <img src="{{ asset('public/front/images/icon-bg.png') }}" class="icon-bg" alt="bg">
 
 
 
                                 <!-- Foreground icon image -->
 
-                                <img src="images/icon-white_4.png" class="icon-foreground" alt="icon">
+                                <img src="{{ asset('public/front/images/icon-white_4.png') }}" class="icon-foreground" alt="icon">
 
                             </div>
 
@@ -544,9 +544,9 @@
 
         <div class="border-shap">
 
-            <div class="border-1" style="background-image: url(images/border-1.png);"></div>
+            <div class="border-1" style="background-image: url({{ asset('public/front/images/border-1.png') }});"></div>
 
-            <div class="border-2" style="background-image: url(images/border-2.png);"></div>
+            <div class="border-2" style="background-image: url({{ asset('public/front/images/border-2.png') }});"></div>
 
         </div>
 
@@ -572,7 +572,8 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
@@ -582,7 +583,7 @@
 
                                 <div class="text">Our platform ensures you’re always inspection-ready with automated
 
-                                    reports and accurate chemical...</div>
+                                    reports and accurate chemical...
 
                             </div>
 
@@ -592,7 +593,7 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
