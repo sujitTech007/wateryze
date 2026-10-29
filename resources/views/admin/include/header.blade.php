@@ -65,7 +65,7 @@
                 <div class="logo-wrapper">
 
                     <a href="{{ route('admin.index') }}" class="logo-link">
-                        <img src="{{ asset('backend/images/logo.png') }}" alt="Wateryze Logo" class="logo-img">
+                        <img src="{{ asset('public/backend/images/logo.png') }}" alt="Wateryze Logo" class="logo-img">
 
                     </a>
 
@@ -133,7 +133,7 @@
 
                 </li>
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
 
                     <a href="{{ route('admin.compliance') }}" class="nav-link {{ request()->routeIs('admin.compliance') ? 'active' : '' }}">
 
@@ -143,7 +143,7 @@
 
                     </a>
 
-                </li>
+                </li> --}}
 
                 <li class="nav-item">
 
@@ -181,7 +181,7 @@
 
                 </li>
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
 
                     <a href="{{ route('admin.billing') }}" class="nav-link {{ request()->routeIs('admin.billing*') ? 'active' : '' }}">
 
@@ -191,7 +191,7 @@
 
                     </a>
 
-                </li>
+                </li> --}}
 
                 <li class="nav-item">
 
@@ -205,7 +205,7 @@
 
                 </li>
 
-                <li class="nav-item">
+               {{-- <li class="nav-item">
 
                     <a href="{{ route('admin.partner-labs') }}" class="nav-link {{ request()->routeIs('admin.partner-labs*') ? 'active' : '' }}">
 
@@ -215,7 +215,7 @@
 
                     </a>
 
-                </li>
+                </li> --}}
 
                 <li class="nav-item">
 
@@ -292,7 +292,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false">
 
-        <img src="{{ asset('backend/images/profile-icon.png') }}"
+        <img src="{{ asset('public/backend/images/profile-icon.png') }}"
              alt="Admin"
              class="profile-avatar">
 

@@ -221,26 +221,7 @@
     @elseif ($page === 'settings')
         <div class="mb-4"><h1 class="h3 mb-1">Dashboard settings</h1><p class="text-muted mb-0">Choose in-app alert preferences and the comparison thresholds used on your dashboard.</p></div>
         <div class="alert alert-warning">Set limits according to the requirements that apply to your site. These configurable limits are not legal advice or an automatic compliance certification.</div>
-        <form action="{{ route('user.settings.update') }}" method="POST" class="card mb-4">
-            @csrf
-            @method('PUT')
-            <div class="card-body">
-                <h2 class="h5">Notification preferences</h2>
-                <div class="row g-3 mb-4">
-                    @foreach (['reminders' => 'In-app reminder notifications', 'quality_alerts' => 'Water-quality alert notifications'] as $key => $label)
-                        <div class="col-md-4"><label class="form-label" for="notify_{{ $key }}">{{ $label }}</label><select class="form-select" name="notifications[{{ $key }}]" id="notify_{{ $key }}"><option value="1" @selected(old('notifications.'.$key, $settings['notifications'][$key] ?? false))>On</option><option value="0" @selected(!old('notifications.'.$key, $settings['notifications'][$key] ?? false))>Off</option></select></div>
-                    @endforeach
-                </div>
-                <h2 class="h5">Water-quality thresholds</h2>
-                <p class="text-muted">Leave an optional limit blank to exclude that boundary from the assessment.</p>
-                <div class="row g-3">
-                    @foreach (['ph_min' => ['pH minimum', '0', '14'], 'ph_max' => ['pH maximum', '0', '14'], 'tds_max' => ['TDS maximum (ppm)', '0', null], 'turbidity_max' => ['Turbidity maximum (NTU)', '0', null], 'orp_min' => ['ORP minimum (mV)', null, null], 'orp_max' => ['ORP maximum (mV)', null, null], 'cod_max' => ['COD maximum (mg/L)', '0', null], 'bod_max' => ['BOD maximum (mg/L)', '0', null], 'discharge_flow_max' => ['Discharge flow maximum (m³/day)', '0', null]] as $key => [$label, $min, $max])
-                        <div class="col-sm-6 col-lg-4"><label class="form-label" for="threshold_{{ $key }}">{{ $label }}</label><input class="form-control" id="threshold_{{ $key }}" name="thresholds[{{ $key }}]" type="number" step="any" @if ($min !== null) min="{{ $min }}" @endif @if ($max !== null) max="{{ $max }}" @endif value="{{ old('thresholds.'.$key, $settings['thresholds'][$key] ?? '') }}"></div>
-                    @endforeach
-                </div>
-            </div>
-            <div class="card-footer bg-white"><button class="btn btn-primary" type="submit">Save settings</button></div>
-        </form>
+        
         <form action="{{ route('user.settings.password') }}" method="POST" class="card">
             @csrf
             @method('PUT')

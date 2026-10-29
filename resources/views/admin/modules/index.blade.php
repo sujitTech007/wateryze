@@ -6,7 +6,9 @@
             <h1 class="page-title mb-1">{{ $module['title'] }}</h1>
             <p class="text-muted mb-0">Manage stored {{ strtolower($module['title']) }} records.</p>
         </div>
-        <a class="btn btn-primary" href="{{ route($module['route'].'.create') }}">Create {{ strtolower($module['singular']) }}</a>
+        @if ($module['key'] !== 'subscriptions')
+            <a class="btn btn-primary" href="{{ route($module['route'].'.create') }}">Create {{ strtolower($module['singular']) }}</a>
+        @endif
     </div>
 
     @if (session('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif
