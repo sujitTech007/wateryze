@@ -2970,3 +2970,23 @@ details > summary::marker {
         gap: 10px;
     }
 }
+
+.profile-wrapper {
+    position: relative;
+}
+
+.profile-dropdown,
+#profileDropdown {
+    z-index: 9999;
+}
+
+.profile-btn {
+    cursor: pointer;
+}
+
+.profile-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
