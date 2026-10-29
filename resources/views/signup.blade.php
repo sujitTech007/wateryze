@@ -79,17 +79,19 @@
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <button class="btn btn-outline-secondary mt-1" type="button" data-password-toggle="password"
-                            aria-label="Show password" aria-pressed="false">Show password</button>
+                        <span style="position:absolute; right:25px; top:38px; cursor:pointer;">👁</span>
+                        <!-- <button class="btn btn-outline-secondary mt-1" type="button" data-password-toggle="password"
+                            aria-label="Show password" aria-pressed="false">Show password</button> -->
                     </div>
 
                     <div class="col-md-6 mb-2">
                         <label for="password_confirmation" class="form-label mb-0">Confirm Password</label>
                         <input id="password_confirmation" name="password_confirmation" type="password"
                             class="form-control" autocomplete="new-password" minlength="8" required>
-                        <button class="btn btn-outline-secondary mt-1" type="button"
+                        <!-- <button class="btn btn-outline-secondary mt-1" type="button"
                             data-password-toggle="password_confirmation" aria-label="Show confirm password"
-                            aria-pressed="false">Show password</button>
+                            aria-pressed="false">Show password</button> -->
+                            <span style="position:absolute; right:25px; top:38px; cursor:pointer;">👁</span>
                     </div>
                 </div>
 
