@@ -11,8 +11,7 @@ class StripeCheckoutService
 
     public function isConfigured(): bool
     {
-        return filled(config('services.stripe.secret'))
-            && filled(config('services.stripe.webhook_secret'));
+        return filled(config('services.stripe.secret'));
     }
 
     public function createCheckoutSession(PaymentAttempt $attempt): array
@@ -28,18 +27,16 @@ class StripeCheckoutService
         $parameters = [
             'mode' => 'subscription',
             'success_url' => route('user.subscription.success').'?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('user.subscription.cancelled'),
+            'cancel_url' => route('user.subscription.cancelled', ['attempt_id' => $attempt->id]),
             'expires_at' => (string) $attempt->expires_at->timestamp,
             'customer_email' => $attempt->user->email,
             'client_reference_id' => (string) $attempt->user_id,
-            'billing_address_collection' => 'required',
-            'automatic_tax[enabled]' => 'true',
-            'customer_update[address]' => 'auto',
+            'payment_method_types[0]' => 'card',
+            'line_items[0][quantity]' => '1',
             'line_items[0][price_data][currency]' => strtolower($attempt->currency),
             'line_items[0][price_data][unit_amount]' => (string) $attempt->amount_cents,
             'line_items[0][price_data][product_data][name]' => $snapshot['name'],
             'line_items[0][price_data][product_data][description]' => $snapshot['description'] ?: $snapshot['name'],
-            'line_items[0][price_data][tax_behavior]' => 'exclusive',
             'line_items[0][price_data][recurring][interval]' => $cycle['interval'],
             'metadata[payment_attempt_id]' => $metadata['payment_attempt_id'],
             'metadata[user_id]' => $metadata['user_id'],
@@ -159,11 +156,25 @@ class StripeCheckoutService
             ? $request->get(self::API_URL.$path, $parameters)
             : $request->asForm()->post(self::API_URL.$path, $parameters);
 
+        $data = $response->json();
         if (! $response->successful()) {
-            throw new StripePaymentException('Stripe could not complete the payment request (HTTP '.$response->status().').');
+            $stripeError = is_array($data) && is_array($data['error'] ?? null)
+                ? $data['error']
+                : [];
+            $message = is_string($stripeError['message'] ?? null)
+                ? trim($stripeError['message'])
+                : 'Stripe rejected the payment request.';
+            $message = preg_replace('/sk_(?:test|live)_[A-Za-z0-9]+/', '[redacted]', $message) ?? $message;
+            $message = mb_substr($message, 0, 400);
+            $code = is_string($stripeError['code'] ?? null)
+                ? ' ('.$stripeError['code'].')'
+                : '';
+
+            throw new StripePaymentException(
+                'Stripe returned HTTP '.$response->status().$code.': '.$message,
+            );
         }
 
-        $data = $response->json();
         if (! is_array($data)) {
             throw new StripePaymentException('Stripe returned an unreadable payment response.');
         }

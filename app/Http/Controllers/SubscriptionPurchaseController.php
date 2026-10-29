@@ -8,6 +8,7 @@ use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\StripeCheckoutService;
 use App\Services\StripePaymentException;
+use App\Services\SubscriptionPaymentNotifier;
 use App\Services\SubscriptionPaymentProcessor;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,6 +45,7 @@ class SubscriptionPurchaseController extends Controller
         Request $request,
         int $plan,
         StripeCheckoutService $stripe,
+        SubscriptionPaymentNotifier $notifier,
     ): RedirectResponse {
         $user = $request->user();
         $subscriptionPlan = SubscriptionPlan::query()
@@ -115,15 +117,29 @@ class SubscriptionPurchaseController extends Controller
 
         try {
             $session = $stripe->createCheckoutSession($attempt->load(['user', 'plan']));
-        } catch (StripePaymentException|ConnectionException $exception) {
+        } catch (StripePaymentException $exception) {
             $attempt->update(['status' => 'failed']);
+            $notifier->sendFailure(
+                $attempt,
+                'We could not create a secure checkout session. Please return to your billing page and try again.',
+            );
             Log::warning('Stripe Checkout could not be started.', [
                 'payment_attempt_id' => $attempt->id,
                 'reason' => $exception->getMessage(),
             ]);
 
             return back()->withErrors([
-                'payment' => 'Secure checkout could not be started. Please try again or contact support.',
+                'payment' => 'Stripe could not start checkout: '.$exception->getMessage(),
+            ]);
+        } catch (ConnectionException $exception) {
+            $attempt->update(['status' => 'failed']);
+            Log::warning('Could not connect to Stripe Checkout.', [
+                'payment_attempt_id' => $attempt->id,
+                'reason' => $exception->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'payment' => 'We could not connect securely to Stripe. Please try again in a moment.',
             ]);
         }
 
@@ -179,8 +195,28 @@ class SubscriptionPurchaseController extends Controller
             ->with('status', 'Payment confirmed. Your subscription is active.');
     }
 
-    public function cancelled(): RedirectResponse
+    public function cancelled(Request $request, SubscriptionPaymentNotifier $notifier): RedirectResponse
     {
+        $validated = $request->validate([
+            'attempt_id' => ['nullable', 'integer', 'min:1'],
+        ]);
+        $attemptId = $validated['attempt_id'] ?? null;
+
+        if ($attemptId !== null) {
+            $attempt = $request->user()->paymentAttempts()
+                ->whereKey($attemptId)
+                ->where('status', 'pending')
+                ->first();
+
+            if ($attempt !== null) {
+                $attempt->update(['status' => 'cancelled']);
+                $notifier->sendFailure(
+                    $attempt,
+                    'Checkout was cancelled before Stripe confirmed payment. You can safely try again from your billing page.',
+                );
+            }
+        }
+
         return redirect()->route('user.subscription')
             ->with('status', 'Checkout was cancelled. No subscription was created.');
     }

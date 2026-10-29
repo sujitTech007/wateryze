@@ -25,6 +25,9 @@ class Invoice extends Model
         'postal_code',
         'notes',
         'paid_at',
+        'receipt_status',
+        'receipt_started_at',
+        'receipt_sent_at',
     ];
 
     protected function casts(): array
@@ -33,6 +36,8 @@ class Invoice extends Model
             'invoice_date' => 'date',
             'due_date' => 'date',
             'paid_at' => 'datetime',
+            'receipt_started_at' => 'datetime',
+            'receipt_sent_at' => 'datetime',
             'amount' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'total' => 'decimal:2',

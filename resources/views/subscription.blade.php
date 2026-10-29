@@ -11,7 +11,7 @@
         <div class="pricing-header">
             <div class="pricing-tag">SIMPLE <span>•</span> FLEXIBLE <span>•</span> POWERFUL</div>
             <h3>Choose Your <span>Plan</span></h3>
-            <p>Plans are billed monthly in CAD. Applicable tax is calculated and added securely at Stripe checkout.</p>
+            <p>Plans are billed monthly in CAD. No tax is calculated or added at checkout.</p>
         </div>
 
         @if (session('status'))

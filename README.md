@@ -87,16 +87,19 @@ Sensor APIs are fetched when a user requests a sync; background polling, arbitra
 
 ### Subscription payments
 
-The Basic and Premium plans are seeded by the subscription-payment migration at CAD 249/month and CAD 499/month. Premium includes all Basic features plus IoT sensor access, real-time compliance, automated audit reports, and ESG tracking. Plan prices are tax-exclusive; Stripe Checkout applies automatic tax and collects a billing address.
+The Basic and Premium plans are seeded by the subscription-payment migration at CAD 249/month and CAD 499/month. Premium includes all Basic features plus IoT sensor access, real-time compliance, automated audit reports, and ESG tracking. Stripe Checkout charges the listed plan price without calculating or adding tax.
 
 Configure these values in `.env` before enabling purchases:
 
 ```dotenv
+STRIPE_KEY=pk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
-Enable Stripe Tax for the Stripe account, then configure a webhook pointing to `https://your-domain.example/stripe/webhook` for these events:
+For compatibility, the server also reads `STRIPE_SECRET` if `STRIPE_SECRET_KEY` is unset. Keep secret keys in the local environment only, and use rotated test/live keys from the Stripe Dashboard. `STRIPE_KEY` is the publishable key; the server-side Checkout integration uses the secret key.
+
+Webhooks are not enabled in the current checkout flow. The signed-webhook handler and payment lifecycle processor are retained for a later deployment, but the webhook route is not registered and no webhook secret is required at this stage. Stripe Checkout does not request automatic tax or billing-address collection.
 
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
@@ -108,7 +111,9 @@ Enable Stripe Tax for the Stripe account, then configure a webhook pointing to `
 - `customer.subscription.updated`
 - `customer.subscription.deleted`
 
-Keep the webhook signing secret private and use HTTPS in production. A checkout return alone does not grant access: the server retrieves the Checkout Session from Stripe and activates a subscription only after confirming the payment and matching it to the pending plan attempt. The signed webhook provides event reconciliation and recurring billing updates. Premium water-monitoring routes require an active subscription linked to a successfully paid attempt; payment failures and expired/cancelled subscriptions do not grant access.
+After checkout, Stripe redirects the signed-in customer back to the application. The server retrieves that Checkout Session directly from Stripe using the secret API key and activates the subscription only if Stripe confirms the payment and it matches the pending plan attempt. A return without confirmed payment grants no access. Until webhooks are enabled, a customer who pays but does not return to the application may need to revisit the success URL/flow or contact support; recurring invoice and cancellation status changes are not automatically reconciled. Premium water-monitoring routes require an active subscription linked to a successfully paid attempt.
+
+After the initial payment is confirmed through the checkout return, the customer receives an HTML and plain-text payment confirmation with the plan, amount paid, payment reference, and included features. A corresponding payment-issue email is sent when checkout creation is rejected by Stripe or the customer cancels Checkout, with duplicate delivery prevented per attempt. Since webhooks are intentionally disabled, a card decline displayed inside Stripe Checkout is not reported to the application immediately; Stripe lets the customer retry, and the app must not treat an unverified return as a definitive failure. Renewal receipts will be sent after webhooks are enabled. Configure a real SMTP/mail provider before production; the default local mail configuration may only log outgoing messages.
 
 Run the feature and unit tests with:
 

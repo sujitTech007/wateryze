@@ -61,19 +61,17 @@
         <div class="card-header bg-white"><h2 class="h5 mb-0">Payment history</h2></div>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead><tr><th>Invoice</th><th>Date</th><th>Amount</th><th>Tax</th><th>Total</th><th>Status</th></tr></thead>
+                <thead><tr><th>Invoice</th><th>Date</th><th>Total paid</th><th>Status</th></tr></thead>
                 <tbody>
                     @forelse ($invoices as $invoice)
                         <tr>
                             <td>{{ $invoice->invoice_number }}</td>
                             <td>{{ $invoice->invoice_date?->format('M j, Y') ?? '—' }}</td>
-                            <td>CAD {{ number_format((float) $invoice->amount, 2) }}</td>
-                            <td>CAD {{ number_format((float) $invoice->tax_amount, 2) }}</td>
                             <td>CAD {{ number_format((float) $invoice->total, 2) }}</td>
                             <td>{{ ucfirst($invoice->status) }}</td>
                         </tr>
                     @empty
-                        <tr><td class="text-center text-muted py-4" colspan="6">No paid invoices are available yet.</td></tr>
+                        <tr><td class="text-center text-muted py-4" colspan="4">No paid invoices are available yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

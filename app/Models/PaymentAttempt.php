@@ -20,6 +20,14 @@ class PaymentAttempt extends Model
         'status',
         'paid_at',
         'expires_at',
+        'tax_amount_cents',
+        'total_amount_cents',
+        'receipt_status',
+        'receipt_started_at',
+        'receipt_sent_at',
+        'failure_email_status',
+        'failure_email_started_at',
+        'failure_email_sent_at',
     ];
 
     protected function casts(): array
@@ -28,6 +36,10 @@ class PaymentAttempt extends Model
             'plan_snapshot' => 'array',
             'paid_at' => 'datetime',
             'expires_at' => 'datetime',
+            'receipt_started_at' => 'datetime',
+            'receipt_sent_at' => 'datetime',
+            'failure_email_started_at' => 'datetime',
+            'failure_email_sent_at' => 'datetime',
         ];
     }
 

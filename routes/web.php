@@ -7,7 +7,6 @@ use App\Http\Controllers\AdminOperationsController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FrontController;
-use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionPurchaseController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Middleware\EnsureWaterMonitoringSubscription;
@@ -31,7 +30,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
-Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
