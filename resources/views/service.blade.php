@@ -5,7 +5,7 @@
 
         <!-- Background Image -->
         <div class="page-title-bg">
-            <img src="images/water_bg.jpg" alt="">
+            <img src="{{ asset('public/front/images/water_bg.jpg') }}" alt="">
         </div>
 
         <div class="auto-container">
@@ -16,7 +16,7 @@
 
         <!-- Bottom Wave Image -->
         <div class="page-title-wave">
-            <img src="images/wave.png" alt="wave">
+            <img src="{{ asset('public/front/images/wave.png') }}" alt="wave">
         </div>
 
     </section>
@@ -93,7 +93,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="00ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_1.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_1.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">Smart Chemical Intelligence</a></h3>
@@ -108,7 +108,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="00ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_2.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_2.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">Real-Time Compliance & Reporting</a></h3>
@@ -122,7 +122,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="00ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_6.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_6.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">Subscription Chemical Kits</a></h3>
@@ -137,7 +137,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="300ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_3.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_3.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">Technician Access & Marketplace</a></h3>
@@ -152,7 +152,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="300ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_4.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_4.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">Equipment & Sensor Support</a></h3>
@@ -166,7 +166,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 service-block">
                     <div class="service-block-one wow flipInY" data-wow-delay="300ms" data-wow-duration="1500ms">
                         <div class="inner-box">
-                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="images/service_card_5.jpg" alt=""></a>
+                            <figure class="image-box"><a href="{{ route('subscription') }}"><img src="{{ asset('public/front/images/service_card_5.jpg') }}" alt=""></a>
                             </figure>
                             <div class="lower-content">
                                 <h3><a href="{{ route('subscription') }}">ESG & Sustainability Tracking</a></h3>
@@ -237,13 +237,13 @@
                 <div class="client-thumb-outer">
                     <div class="client-thumbs-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_1.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_1.png') }}" alt=""></figure>
                         </div>
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_2.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_2.png') }}    " alt=""></figure>
                         </div>
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="images/testimonial_3.png" alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_3.png') }}" alt=""></figure>
                         </div>
                     </div>
                 </div>

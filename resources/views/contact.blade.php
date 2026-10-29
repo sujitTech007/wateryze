@@ -4,7 +4,7 @@
 
         <!-- Background Image -->
         <div class="page-title-bg">
-            <img src="images/water_bg.jpg" alt="">
+            <img src="{{ asset('public/front/images/water_bg.jpg') }}" alt="">
         </div>
 
         <div class="auto-container">
@@ -15,7 +15,7 @@
 
         <!-- Bottom Wave Image -->
         <div class="page-title-wave">
-            <img src="images/wave.png" alt="wave">
+            <img src="{{ asset('public/front/images/wave.png') }}" alt="wave">
         </div>
 
     </section>

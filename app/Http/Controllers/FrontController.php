@@ -10,7 +10,12 @@ class FrontController extends Controller
 {
     public function home(): View
     {
-        return view('index');
+        return view('index', [
+            'plans' => SubscriptionPlan::query()
+                ->where('status', 'active')
+                ->orderBy('amount')
+                ->get(),
+        ]);
     }
 
     public function about(): View

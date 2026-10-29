@@ -4,7 +4,7 @@
 
         <!-- Background Image -->
         <div class="page-title-bg">
-            <img src="images/water_bg.jpg" alt="">
+            <img src="{{ asset('public/front/images/water_bg.jpg') }}" alt="">
         </div>
 
         <div class="auto-container">
@@ -15,7 +15,7 @@
 
         <!-- Bottom Wave Image -->
         <div class="page-title-wave">
-            <img src="images/wave.png" alt="wave">
+            <img src="{{ asset('public/front/images/wave.png') }}" alt="wave">
         </div>
 
     </section>
@@ -39,7 +39,7 @@
         <div class="info-card">
 
             <div class="info-image">
-                <img src="images/news-4.jpg" alt="Regulatory Burden">
+                <img src="{{ asset('public/front/images/news-4.jpg') }}" alt="Regulatory Burden">
             </div>
 
             <div class="info-text">
@@ -74,7 +74,7 @@
             </div>
 
             <div class="info-image">
-                <img src="images/news_1.jpg" alt="Compliance Challenges">
+                <img src="{{ asset('public/front/images/news_1.jpg') }}" alt="Compliance Challenges">
             </div>
 
         </div>
@@ -83,7 +83,7 @@
         <div class="info-card">
 
             <div class="info-image">
-                <img src="images/video_1.jpg" alt="Regulatory Burden">
+                <img src="{{ asset('public/front/images/video_1.jpg') }}" alt="Regulatory Burden">
             </div>
 
             <div class="info-text">
