@@ -1504,9 +1504,9 @@ body.sidebar-open::before {
 
     border: none;
 
-    background: var(--light-gray);
+    background: #245a99;
 
-    color: var(--text-dark);
+    color: #fff;
 
     font-weight: 600;
 
