@@ -220,7 +220,6 @@
 
     @elseif ($page === 'settings')
         <div class="mb-4"><h1 class="h3 mb-1">Dashboard settings</h1><p class="text-muted mb-0">Choose in-app alert preferences and the comparison thresholds used on your dashboard.</p></div>
-        <div class="alert alert-warning">Set limits according to the requirements that apply to your site. These configurable limits are not legal advice or an automatic compliance certification.</div>
         
         <form action="{{ route('user.settings.password') }}" method="POST" class="card">
             @csrf

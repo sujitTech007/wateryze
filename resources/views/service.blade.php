@@ -184,7 +184,7 @@
     <!-- service-section end -->
 
  <!-- testimonial-section  -->
-    <section class="testimonial-section">
+     <section class="testimonial-section">
         <div class="auto-container">
             <div class="top-title clearfix">
                 <div class="title-inner">
@@ -239,7 +239,7 @@
                             <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_1.png') }}" alt=""></figure>
                         </div>
                         <div class="thumb-item">
-                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_2.png') }}    " alt=""></figure>
+                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_2.png') }}" alt=""></figure>
                         </div>
                         <div class="thumb-item">
                             <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_3.png') }}" alt=""></figure>

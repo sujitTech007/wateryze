@@ -569,7 +569,7 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
@@ -589,7 +589,7 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
@@ -611,9 +611,9 @@
 
                         <div class="image-box">
 
-                            <div class="pattern-bg" style="background-image: url(images/icons/pattern-2.png);"></div>
+                            <div class="pattern-bg" style="background-image: url({{ asset('public/front/images/icons/pattern-2.png') }});"></div>
 
-                            <figure class="image wow slideInUp" data-wow-delay="0ms" data-wow-duration="1500ms"><img src="images/water_glass_1.png" alt="" style="width: 215px; margin-bottom: 20px;">
+                            <figure class="image wow slideInUp" data-wow-delay="0ms" data-wow-duration="1500ms"><img src="{{ asset('public/front/images/water_glass_1.png') }}" alt="" style="width: 215px; margin-bottom: 20px;">
 
                             </figure>
 
@@ -631,7 +631,7 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
@@ -651,7 +651,7 @@
 
 
 
-                                    <img src="images/water_drop_1.png" alt="">
+                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
 
                                 </figure>
 
@@ -723,7 +723,7 @@
 
                     <div class="team-image">
 
-                        <img src="images/team_1.jpg" alt="">
+                        <img src="{{ asset('public/front/images/team_1.jpg') }}" alt="">
 
                     </div>
 
@@ -745,7 +745,7 @@
 
                     <div class="team-image">
 
-                        <img src="images/team_2.jpg" alt="">
+                        <img src="{{ asset('public/front/images/team_2.jpg') }}" alt="">
 
                     </div>
 
@@ -767,7 +767,7 @@
 
                     <div class="team-image">
 
-                        <img src="images/team_3.jpg" alt="">
+                        <img src="{{ asset('public/front/images/team_3.jpg') }}" alt="">
 
                     </div>
 
