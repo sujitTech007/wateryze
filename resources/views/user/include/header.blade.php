@@ -46,9 +46,15 @@
                     </a>
                 </li>
                   <li class="nav-item">
-                    <a href="{{ route('user.water-monitoring') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.water-monitoring*')])>
-                        <i class="fas fa-tint"></i>
-                        <span>Water Monitoring</span>
+                    <a href="{{ auth()->user()->hasWaterMonitoringAccess() ? route('user.water-monitoring') : route('user.subscription') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.water-monitoring*')])>
+                        <i class="fas {{ auth()->user()->hasWaterMonitoringAccess() ? 'fa-tint' : 'fa-lock' }}"></i>
+                        <span>{{ auth()->user()->hasWaterMonitoringAccess() ? 'Water Monitoring' : 'Unlock Water Monitoring' }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('user.subscription') }}" @class(['nav-link' => true, 'active' => request()->routeIs('user.subscription*')])>
+                        <i class="fas fa-credit-card"></i>
+                        <span>Billing &amp; Subscriptions</span>
                     </a>
                 </li>
                 <li class="nav-item">

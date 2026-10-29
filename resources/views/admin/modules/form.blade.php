@@ -42,6 +42,29 @@
                                 </div>
                             @endforeach
                         </fieldset>
+                    @elseif ($fieldType === 'repeatable')
+                        @php
+                            $repeatableValues = old($field['name'], $oldValue ?? []);
+                            $repeatableValues = is_array($repeatableValues) ? array_values($repeatableValues) : [];
+                            if ($repeatableValues === []) {
+                            $repeatableValues = [''];
+                            }
+                        @endphp
+                        <fieldset class="col-12">
+                            <legend class="form-label">{{ $field['label'] }}</legend>
+                            <p class="form-text">Add up to 20 features. Leave a row empty to ignore it.</p>
+                            <div class="repeatable-list" data-repeatable-list="{{ $field['name'] }}" data-repeatable-label="{{ $field['label'] }}" data-max-items="20">
+                            @foreach ($repeatableValues as $value)
+                                <div class="input-group mb-2 repeatable-row">
+                                    <input class="form-control" type="text" name="{{ $field['name'] }}[]" value="{{ $value }}" maxlength="255" aria-label="{{ $field['label'] }} {{ $loop->iteration }}">
+                                    <button class="btn btn-outline-danger" type="button" data-remove-repeatable @disabled($loop->first)>Remove</button>
+                                </div>
+                            @endforeach
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-add-repeatable="{{ $field['name'] }}">Add feature</button>
+                            @error($field['name'])<div class="text-danger small">{{ $message }}</div>@enderror
+                            @error($field['name'].'.*')<div class="text-danger small">{{ $message }}</div>@enderror
+                        </fieldset>
                     @else
                         <div class="{{ $fieldType === 'textarea' ? 'col-12' : 'col-md-6' }}">
                             <label class="form-label" for="{{ $field['name'] }}">{{ $field['label'] }}</label>
@@ -72,5 +95,52 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.querySelectorAll('[data-repeatable-list]').forEach(list => {
+        const fieldName = list.dataset.repeatableList;
+        const addButton = document.querySelector(`[data-add-repeatable="${fieldName}"]`);
+        const maxItems = Number(list.dataset.maxItems);
+
+        function updateRows() {
+            const rows = [...list.querySelectorAll('.repeatable-row')];
+            rows.forEach(row => {
+                row.querySelector('[data-remove-repeatable]').disabled = rows.length === 1;
+            });
+            addButton.disabled = rows.length >= maxItems;
+        }
+
+        addButton.addEventListener('click', () => {
+            if (list.querySelectorAll('.repeatable-row').length >= maxItems) return;
+
+            const row = document.createElement('div');
+            row.className = 'input-group mb-2 repeatable-row';
+            const input = document.createElement('input');
+            input.className = 'form-control';
+            input.type = 'text';
+            input.name = `${fieldName}[]`;
+            input.maxLength = 255;
+            input.setAttribute('aria-label', `${list.dataset.repeatableLabel} feature`);
+            const removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-outline-danger';
+            removeButton.type = 'button';
+            removeButton.textContent = 'Remove';
+            removeButton.dataset.removeRepeatable = '';
+            row.append(input, removeButton);
+            list.append(row);
+            updateRows();
+            input.focus();
+        });
+
+        list.addEventListener('click', event => {
+            if (event.target.matches('[data-remove-repeatable]')) {
+                event.target.closest('.repeatable-row').remove();
+                updateRows();
+            }
+        });
+
+        updateRows();
+    });
+</script>
 
 @include('admin.include.footer')

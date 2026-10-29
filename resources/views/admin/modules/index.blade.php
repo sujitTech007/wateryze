@@ -42,6 +42,10 @@
                                     } elseif (is_bool($value)) {
                                         $value = $value ? 'Yes' : 'No';
                                     }
+                                    if ($column === 'features') {
+                                        $value = count($record->features ?? []);
+                                        $value .= $value === 1 ? ' feature' : ' features';
+                                    }
                                 @endphp
                                 <td>{{ $value ?? '—' }}</td>
                             @endforeach

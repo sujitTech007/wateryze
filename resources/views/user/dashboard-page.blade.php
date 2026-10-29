@@ -8,13 +8,21 @@
             <div>
                 <span class="text-muted">Wastewater management</span>
                 <h1 class="h3 mb-1">Welcome to your dashboard, {{ auth()->user()->first_name ?: auth()->user()->name }}</h1>
-                <p class="text-muted mb-0">A live view of your saved sites, water readings and upcoming tasks.</p>
+                <p class="text-muted mb-0">A live view of your saved sites, subscription, and upcoming tasks.</p>
             </div>
-            <a href="{{ route('user.water-monitoring') }}" class="btn btn-primary"><i class="fas fa-wave-square me-2"></i>View sensor readings</a>
+            @if ($hasWaterMonitoringAccess)
+                <a href="{{ route('user.water-monitoring') }}" class="btn btn-primary"><i class="fas fa-wave-square me-2"></i>View sensor readings</a>
+            @else
+                <a href="{{ route('user.subscription') }}" class="btn btn-primary"><i class="fas fa-credit-card me-2"></i>Choose a plan</a>
+            @endif
         </div>
 
         <div class="alert alert-info">
-            @if ($latestReading)
+            @if (! $hasWaterMonitoringAccess)
+                <strong>Water monitoring requires a paid Premium subscription.</strong>
+                Choose Premium to enable sensor readings, compliance dashboards, and audit reports.
+                <a href="{{ route('user.subscription') }}">View plans and billing</a>.
+            @elseif ($latestReading)
                 Latest reading received for <strong>{{ $latestReading->site->name }}</strong> on
                 {{ $latestReading->recorded_at->format('M j, Y g:i A') }}.
                 {{ $complianceStatus === 'Needs attention' ? 'Review the flagged water-quality values below.' : 'Readings are imported from configured sensor API connections.' }}
@@ -26,7 +34,7 @@
         <div class="row g-3 mb-4">
             @foreach ([
                 ['Sites', $siteCount, 'fa-map-marker-alt', 'user.site-locations'],
-                ['Water readings', $readingCount, 'fa-tint', 'user.water-monitoring'],
+                ['Water readings', $readingCount, 'fa-tint', $hasWaterMonitoringAccess ? 'user.water-monitoring' : 'user.subscription'],
                 ['Chemical entries this month', $chemicalUsageCount, 'fa-flask', 'user.chemical-kits.index'],
                 ['Upcoming tasks', $upcomingReminderCount, 'fa-clock', 'user.schedule'],
             ] as [$label, $value, $icon, $routeName])
@@ -41,7 +49,7 @@
             @endforeach
         </div>
 
-        @if ($complianceIssues !== [])
+        @if ($hasWaterMonitoringAccess && $complianceIssues !== [])
             <div class="alert alert-warning">
                 <strong><i class="fas fa-triangle-exclamation me-2"></i>Water quality needs review.</strong>
                 Out-of-range parameters in the latest reading: {{ implode(', ', $complianceIssues) }}.
@@ -50,6 +58,7 @@
         @endif
 
         <div class="row g-4">
+            @if ($hasWaterMonitoringAccess)
             <section class="col-lg-7">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center bg-white">
@@ -76,6 +85,15 @@
                     </div>
                 </div>
             </section>
+            @else
+            <section class="col-lg-7">
+                <div class="card card-body h-100">
+                    <h2 class="h5">Unlock water monitoring</h2>
+                    <p class="text-muted">Sensor readings, compliance summaries, and audit reports are available with Premium.</p>
+                    <a class="btn btn-outline-primary align-self-start" href="{{ route('user.subscription') }}">Compare plans</a>
+                </div>
+            </section>
+            @endif
             <section class="col-lg-5">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center bg-white">

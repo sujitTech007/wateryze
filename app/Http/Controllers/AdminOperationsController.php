@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Invoice;
 use App\Models\KitDelivery;
 use App\Models\PartnerLab;
+use App\Models\PaymentAttempt;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\Technician;
@@ -103,9 +104,12 @@ class AdminOperationsController extends Controller
         $module = $this->module($request);
         $item = $module['model']::query()->findOrFail($record);
 
-        if ($module['key'] === 'subscription-plans' && $item->subscriptions()->exists()) {
+        if (
+            $module['key'] === 'subscription-plans'
+            && ($item->subscriptions()->exists() || PaymentAttempt::query()->where('subscription_plan_id', $item->id)->where('status', 'pending')->exists())
+        ) {
             return back()->withErrors([
-                'record' => 'This plan is assigned to subscriptions and cannot be deleted.',
+                'record' => 'This plan is assigned to subscriptions or pending payments and cannot be deleted.',
             ]);
         }
 
@@ -176,6 +180,12 @@ class AdminOperationsController extends Controller
 
                 continue;
             }
+            if (($field['type'] ?? null) === 'repeatable') {
+                $rules[$field['name']] = $fieldRules;
+                $rules[$field['name'].'.*'] = ['nullable', 'string', 'max:255'];
+
+                continue;
+            }
             $rules[$field['name']] = $fieldRules;
         }
 
@@ -208,6 +218,13 @@ class AdminOperationsController extends Controller
                 $data[$field['name']] = $request->boolean($field['name']);
             } elseif (($field['type'] ?? null) === 'multi-checkbox') {
                 $data[$field['name']] = $request->input($field['name'], []);
+            } elseif (($field['type'] ?? null) === 'repeatable') {
+                $data[$field['name']] = collect($data[$field['name']] ?? [])
+                    ->map(fn ($value): string => trim($value))
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
             }
         }
 
@@ -274,10 +291,12 @@ class AdminOperationsController extends Controller
                 'title' => 'Subscription plans',
                 'singular' => 'Subscription plan',
                 'search' => ['name', 'billing_cycle', 'status'],
-                'columns' => ['name', 'amount', 'billing_cycle', 'status'],
+                'columns' => ['name', 'amount', 'billing_cycle', 'features', 'water_monitoring_enabled', 'status'],
                 'fields' => [
                     ['name' => 'name', 'label' => 'Plan name', 'rules' => ['required', 'string', 'max:120'], 'unique' => true],
                     ['name' => 'description', 'label' => 'Description', 'type' => 'textarea', 'rules' => ['nullable', 'string', 'max:5000']],
+                    ['name' => 'features', 'label' => 'Plan features', 'type' => 'repeatable', 'rules' => ['nullable', 'array', 'max:20']],
+                    ['name' => 'water_monitoring_enabled', 'label' => 'Includes Premium water monitoring access', 'type' => 'checkbox'],
                     ['name' => 'amount', 'label' => 'Amount', 'type' => 'number', 'rules' => ['required', 'numeric', 'min:0', 'max:99999999'], 'step' => '0.01'],
                     ['name' => 'billing_cycle', 'label' => 'Billing cycle', 'type' => 'select', 'rules' => ['required', 'string'], 'choices' => ['monthly' => 'Monthly', 'quarterly' => 'Quarterly', 'yearly' => 'Yearly']],
                     ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'rules' => ['required', 'string'], 'choices' => ['active' => 'Active', 'inactive' => 'Inactive']],

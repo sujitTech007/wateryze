@@ -8,14 +8,15 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showLoginForm(): View
+    public function showLoginForm(Request $request): View
     {
-        return view('login');
+        return view('login', ['planId' => $request->integer('plan_id') ?: null]);
     }
 
     public function login(Request $request): RedirectResponse
@@ -27,6 +28,11 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email', 'max:255'],
             'password' => ['required', 'string'],
+            'plan_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('subscription_plans', 'id')->where('status', 'active'),
+            ],
         ]);
 
         if (Admin::where('email', $credentials['email'])->exists()
@@ -40,12 +46,14 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->flash('status', 'You are now signed in.');
 
-        return redirect()->route('user.dashboard');
+        return isset($credentials['plan_id'])
+            ? redirect()->route('subscription', ['plan_id' => $credentials['plan_id']])
+            : redirect()->route('user.dashboard');
     }
 
-    public function showRegistrationForm(): View
+    public function showRegistrationForm(Request $request): View
     {
-        return view('signup');
+        return view('signup', ['planId' => $request->integer('plan_id') ?: null]);
     }
 
     public function register(Request $request): RedirectResponse
@@ -63,6 +71,11 @@ class AuthController extends Controller
             'phone' => ['required', 'string', 'max:25', 'regex:/^(?=(?:\D*\d){4,15}$)[0-9().\-\s]+$/'],
             'password' => ['required', 'confirmed', Password::min(8)],
             'terms' => ['accepted'],
+            'plan_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('subscription_plans', 'id')->where('status', 'active'),
+            ],
         ]);
 
         $user = User::create([
@@ -81,7 +94,9 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $request->session()->flash('status', 'Your account has been created successfully.');
 
-        return redirect()->route('user.dashboard');
+        return isset($validated['plan_id'])
+            ? redirect()->route('subscription', ['plan_id' => $validated['plan_id']])
+            : redirect()->route('user.dashboard');
     }
 
     public function logout(Request $request): RedirectResponse

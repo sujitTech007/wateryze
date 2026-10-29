@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Site;
-use App\Models\SensorApiConnection;
 use App\Models\User;
 use App\Models\WaterReading;
 use App\Services\SensorApiClient;
@@ -49,14 +48,18 @@ class UserDashboardController extends Controller
     public function dashboard(Request $request): View
     {
         $user = $request->user();
-        $reading = $user->waterReadings()->with('site')->latest('recorded_at')->first();
+        $hasWaterMonitoringAccess = $user->hasWaterMonitoringAccess();
+        $reading = $hasWaterMonitoringAccess
+            ? $user->waterReadings()->with('site')->latest('recorded_at')->first()
+            : null;
         $thresholds = $this->thresholds($user->settings ?? []);
         $issues = $reading?->complianceIssues($thresholds) ?? [];
 
         return view('user.index', [
             'latestReading' => $reading,
+            'hasWaterMonitoringAccess' => $hasWaterMonitoringAccess,
             'siteCount' => $user->sites()->count(),
-            'readingCount' => $user->waterReadings()->count(),
+            'readingCount' => $hasWaterMonitoringAccess ? $user->waterReadings()->count() : 0,
             'chemicalUsageCount' => $user->chemicalUsages()->whereBetween('usage_date', [now()->startOfMonth(), now()->endOfMonth()])->count(),
             'upcomingReminderCount' => $user->reminders()->where('status', 'scheduled')->where('due_at', '>=', now())->count(),
             'alertCount' => $user->dashboardNotifications()->where('type', 'alert')->whereNull('dismissed_at')->count(),
@@ -64,7 +67,9 @@ class UserDashboardController extends Controller
             'complianceStatus' => $reading?->complianceStatus($thresholds) ?? 'No data',
             'complianceIssues' => $issues,
             'thresholds' => $thresholds,
-            'recentReadings' => $user->waterReadings()->with('site')->latest('recorded_at')->limit(5)->get(),
+            'recentReadings' => $hasWaterMonitoringAccess
+                ? $user->waterReadings()->with('site')->latest('recorded_at')->limit(5)->get()
+                : collect(),
             'upcomingReminders' => $user->reminders()->with('site')->where('status', 'scheduled')->orderBy('due_at')->limit(5)->get(),
         ]);
     }
@@ -328,12 +333,15 @@ class UserDashboardController extends Controller
 
     public function siteLocations(Request $request): View
     {
-        $sites = $request->user()->sites()
-            ->withCount(['waterReadings', 'chemicalUsages', 'reminders'])
+        $user = $request->user();
+        $hasWaterMonitoringAccess = $user->hasWaterMonitoringAccess();
+        $sites = $user->sites()
+            ->withCount(['chemicalUsages', 'reminders'])
+            ->when($hasWaterMonitoringAccess, fn (Builder $query) => $query->withCount('waterReadings'))
             ->orderBy('name')
             ->paginate(15);
 
-        return view('user.site-locations.index', compact('sites'));
+        return view('user.site-locations.index', compact('sites', 'hasWaterMonitoringAccess'));
     }
 
     public function createSite(Request $request): View
@@ -349,16 +357,29 @@ class UserDashboardController extends Controller
 
     public function viewSite(Request $request, int $site): View
     {
-        $site = $request->user()->sites()
-            ->withCount(['waterReadings', 'chemicalUsages', 'reminders'])
+        $user = $request->user();
+        $hasWaterMonitoringAccess = $user->hasWaterMonitoringAccess();
+        $siteQuery = $user->sites()
+            ->withCount(['chemicalUsages', 'reminders'])
+            ->when($hasWaterMonitoringAccess, fn (Builder $query) => $query->withCount('waterReadings'))
             ->with([
-                'waterReadings' => fn (HasMany $query) => $query->latest('recorded_at')->limit(5),
                 'chemicalUsages' => fn (HasMany $query) => $query->latest('usage_date')->limit(5),
                 'reminders' => fn (HasMany $query) => $query->latest('due_at')->limit(5),
-            ])
+            ]);
+        if ($hasWaterMonitoringAccess) {
+            $siteQuery->with([
+                'waterReadings' => fn (HasMany $query) => $query->latest('recorded_at')->limit(5),
+            ]);
+        }
+        $site = $siteQuery
             ->findOrFail($site);
 
-        return view('user.site-locations.view', compact('site'));
+        if (! $hasWaterMonitoringAccess) {
+            $site->setAttribute('water_readings_count', 0);
+            $site->setRelation('waterReadings', collect());
+        }
+
+        return view('user.site-locations.view', compact('site', 'hasWaterMonitoringAccess'));
     }
 
     public function editSite(Request $request, int $site): View

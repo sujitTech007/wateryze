@@ -45,21 +45,44 @@ class AdminOperationsTest extends TestCase
             'amount' => '19.95',
             'billing_cycle' => 'monthly',
             'status' => 'active',
+            'features' => [' API access ', 'Email support', 'Monitoring dashboard'],
         ])->assertRedirect(route('admin.subscription-plans'));
-        $plan = SubscriptionPlan::firstOrFail();
+        $plan = SubscriptionPlan::query()->where('name', 'Starter')->firstOrFail();
+        $this->assertSame(
+            ['API access', 'Email support', 'Monitoring dashboard'],
+            $plan->features,
+        );
         $this->get(route('admin.subscription-plans'))
             ->assertOk()
-            ->assertSee('Starter');
+            ->assertSee('Starter')
+            ->assertSee('3 features');
         $this->get(route('admin.subscription-plans.show', $plan))
             ->assertOk()
-            ->assertSee('Subscription plan details');
+            ->assertSee('Subscription plan details')
+            ->assertSee('API access')
+            ->assertSee('Email support')
+            ->assertSee('Monitoring dashboard');
         $this->put(route('admin.subscription-plans.update', $plan), [
             'name' => 'Starter Plus',
             'amount' => '29.95',
             'billing_cycle' => 'monthly',
             'status' => 'active',
+            'features' => ['Priority support', '', 'Priority support'],
         ])->assertRedirect(route('admin.subscription-plans'));
         $this->assertDatabaseHas('subscription_plans', ['id' => $plan->id, 'name' => 'Starter Plus']);
+        $this->assertSame(['Priority support'], $plan->fresh()->features);
+        $this->get(route('admin.subscription-plans.edit', $plan))
+            ->assertOk()
+            ->assertSee('name="features[]"', false)
+            ->assertSee('Priority support');
+
+        $this->put(route('admin.subscription-plans.update', $plan), [
+            'name' => 'Starter Plus',
+            'amount' => '29.95',
+            'billing_cycle' => 'monthly',
+            'status' => 'active',
+            'features' => array_fill(0, 21, 'Feature'),
+        ])->assertSessionHasErrors('features');
 
         $this->post(route('admin.subscriptions.store'), [
             'user_id' => $customer->id,

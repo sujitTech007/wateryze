@@ -3,13 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\Feature\Concerns\CreatesPaidSubscription;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
+    use CreatesPaidSubscription;
     use RefreshDatabase;
 
     public function test_registration_validates_input_creates_user_and_signs_them_in(): void
@@ -55,7 +58,9 @@ class AuthTest extends TestCase
 
     public function test_authenticated_user_dashboard_pages_are_reachable_by_named_routes(): void
     {
-        $this->actingAs(User::factory()->create());
+        $user = User::factory()->create();
+        $this->createPaidSubscription($user);
+        $this->actingAs($user);
 
         $routes = [
             'user.dashboard',
@@ -77,6 +82,35 @@ class AuthTest extends TestCase
         foreach ($routes as $route) {
             $this->get(route($route))->assertOk();
         }
+    }
+
+    public function test_water_monitoring_requires_a_successful_premium_payment(): void
+    {
+        $user = User::factory()->create();
+        $basicPlan = SubscriptionPlan::query()->where('water_monitoring_enabled', false)->firstOrFail();
+        $attempt = $user->paymentAttempts()->create([
+            'subscription_plan_id' => $basicPlan->id,
+            'amount_cents' => (int) round((float) $basicPlan->amount * 100),
+            'currency' => 'CAD',
+            'billing_cycle' => 'monthly',
+            'plan_snapshot' => ['water_monitoring_enabled' => false],
+            'status' => 'pending',
+        ]);
+        $user->subscriptions()->create([
+            'payment_attempt_id' => $attempt->id,
+            'stripe_subscription_id' => 'sub_basic_'.$user->id,
+            'water_monitoring_enabled' => true,
+            'subscription_plan_id' => $basicPlan->id,
+            'billing_cycle' => 'monthly',
+            'amount' => $basicPlan->amount,
+            'start_date' => today(),
+            'status' => 'active',
+        ]);
+        $this->actingAs($user);
+
+        $this->get(route('user.water-monitoring'))
+            ->assertRedirect(route('user.subscription'))
+            ->assertSessionHasErrors('subscription');
     }
 
     public function test_login_and_registration_pages_render_working_forms(): void

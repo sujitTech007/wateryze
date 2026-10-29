@@ -7,7 +7,10 @@ use App\Http\Controllers\AdminOperationsController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\SubscriptionPurchaseController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Middleware\EnsureWaterMonitoringSubscription;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(FrontController::class)->group(function () {
@@ -28,6 +31,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
@@ -40,17 +44,25 @@ Route::prefix('user')
     ->middleware('auth')
     ->controller(UserDashboardController::class)
     ->group(function () {
+        Route::get('/subscription', [SubscriptionPurchaseController::class, 'index'])->name('subscription');
+        Route::post('/subscription/{plan}/checkout', [SubscriptionPurchaseController::class, 'checkout'])
+            ->whereNumber('plan')
+            ->middleware('throttle:5,1')
+            ->name('subscription.checkout');
+        Route::get('/subscription/checkout/success', [SubscriptionPurchaseController::class, 'success'])->name('subscription.success');
+        Route::get('/subscription/checkout/cancelled', [SubscriptionPurchaseController::class, 'cancelled'])->name('subscription.cancelled');
+        Route::post('/subscription/cancel', [SubscriptionPurchaseController::class, 'cancel'])->middleware('throttle:5,1')->name('subscription.cancel');
         Route::get('/dashboard', 'dashboard')->name('dashboard');
-        Route::get('/water-monitoring', 'waterMonitoring')->name('water-monitoring');
-        Route::get('/water-monitoring/apis/create', 'createSensorApiConnection')->name('water-monitoring.apis.create');
-        Route::post('/water-monitoring/apis', 'storeSensorApiConnection')->name('water-monitoring.apis.store');
-        Route::get('/water-monitoring/apis/{connection}/edit', 'editSensorApiConnection')->name('water-monitoring.apis.edit');
-        Route::put('/water-monitoring/apis/{connection}', 'updateSensorApiConnection')->name('water-monitoring.apis.update');
-        Route::delete('/water-monitoring/apis/{connection}', 'deleteSensorApiConnection')->name('water-monitoring.apis.destroy');
-        Route::post('/water-monitoring/apis/{connection}/sync', 'syncSensorApiConnection')->middleware('throttle:10,1')->name('water-monitoring.apis.sync');
-        Route::get('/water-monitoring/export', 'exportWaterReadings')->name('water-monitoring.export');
-        Route::get('/water-monitoring/{reading}', 'viewWaterReading')->name('water-monitoring.view');
-        Route::delete('/water-monitoring/{reading}', 'deleteWaterReading')->name('water-monitoring.destroy');
+        Route::get('/water-monitoring', 'waterMonitoring')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring');
+        Route::get('/water-monitoring/apis/create', 'createSensorApiConnection')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.apis.create');
+        Route::post('/water-monitoring/apis', 'storeSensorApiConnection')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.apis.store');
+        Route::get('/water-monitoring/apis/{connection}/edit', 'editSensorApiConnection')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.apis.edit');
+        Route::put('/water-monitoring/apis/{connection}', 'updateSensorApiConnection')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.apis.update');
+        Route::delete('/water-monitoring/apis/{connection}', 'deleteSensorApiConnection')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.apis.destroy');
+        Route::post('/water-monitoring/apis/{connection}/sync', 'syncSensorApiConnection')->middleware([EnsureWaterMonitoringSubscription::class, 'throttle:10,1'])->name('water-monitoring.apis.sync');
+        Route::get('/water-monitoring/export', 'exportWaterReadings')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.export');
+        Route::get('/water-monitoring/{reading}', 'viewWaterReading')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.view');
+        Route::delete('/water-monitoring/{reading}', 'deleteWaterReading')->middleware(EnsureWaterMonitoringSubscription::class)->name('water-monitoring.destroy');
         Route::get('/chemical-kits', 'chemicalKits')->name('chemical-kits.index');
         Route::get('/chemical-kits/create', 'createChemicalKitUsage')->name('chemical-kits.create');
         Route::get('/chemical-kits/{usage}/edit', 'editChemicalUsage')->name('chemical-kits.edit');
@@ -58,9 +70,9 @@ Route::prefix('user')
         Route::post('/chemical-kits', 'storeChemicalUsage')->name('chemical-kits.store');
         Route::put('/chemical-kits/{usage}', 'updateChemicalUsage')->name('chemical-kits.update');
         Route::delete('/chemical-kits/{usage}', 'deleteChemicalUsage')->name('chemical-kits.destroy');
-        Route::get('/compliance', 'compliance')->name('compliance');
-        Route::get('/audit-report', 'auditReport')->name('audit-report');
-        Route::get('/audit-report/export', 'exportAuditReport')->name('audit-report.export');
+        Route::get('/compliance', 'compliance')->middleware(EnsureWaterMonitoringSubscription::class)->name('compliance');
+        Route::get('/audit-report', 'auditReport')->middleware(EnsureWaterMonitoringSubscription::class)->name('audit-report');
+        Route::get('/audit-report/export', 'exportAuditReport')->middleware(EnsureWaterMonitoringSubscription::class)->name('audit-report.export');
         Route::get('/schedule', 'schedule')->name('schedule');
         Route::get('/schedule/create', 'createReminder')->name('schedule.create');
         Route::get('/schedule/{reminder}/edit', 'editReminder')->name('schedule.edit');
@@ -68,9 +80,9 @@ Route::prefix('user')
         Route::post('/schedule', 'storeReminder')->name('schedule.store');
         Route::put('/schedule/{reminder}', 'updateReminder')->name('schedule.update');
         Route::delete('/schedule/{reminder}', 'deleteReminder')->name('schedule.destroy');
-        Route::get('/reports', 'reports')->name('reports.index');
-        Route::get('/reports/export', 'exportAuditReport')->name('reports.export');
-        Route::get('/reports/view/{reading?}', 'viewReport')->name('reports.view');
+        Route::get('/reports', 'reports')->middleware(EnsureWaterMonitoringSubscription::class)->name('reports.index');
+        Route::get('/reports/export', 'exportAuditReport')->middleware(EnsureWaterMonitoringSubscription::class)->name('reports.export');
+        Route::get('/reports/view/{reading?}', 'viewReport')->middleware(EnsureWaterMonitoringSubscription::class)->name('reports.view');
         Route::get('/site-locations', 'siteLocations')->name('site-locations');
         Route::get('/site-locations/create', 'createSite')->name('site-locations.create');
         Route::get('/site-locations/{site}/edit', 'editSite')->name('site-locations.edit');

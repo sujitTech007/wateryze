@@ -91,6 +91,30 @@ class User extends Authenticatable
         return $this->hasMany(SensorApiConnection::class);
     }
 
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function paymentAttempts(): HasMany
+    {
+        return $this->hasMany(PaymentAttempt::class);
+    }
+
+    public function hasWaterMonitoringAccess(): bool
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->whereNotNull('payment_attempt_id')
+            ->where('water_monitoring_enabled', true)
+            ->whereHas('paymentAttempt', fn ($query) => $query->where('status', 'paid'))
+            ->where(function ($query): void {
+                $query->whereNull('end_date')
+                    ->orWhereDate('end_date', '>=', now()->toDateString());
+            })
+            ->exists();
+    }
+
     protected function fullPhone(): Attribute
     {
         return Attribute::get(fn () => trim(($this->country_code ?? '').' '.$this->phone));

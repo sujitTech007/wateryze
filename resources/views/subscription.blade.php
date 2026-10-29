@@ -1,145 +1,78 @@
 @include('include.header')
 
-    <!-- Page Title -->
-    <section class="page-title centred">
-      <!-- Background Image -->
-      <div class="page-title-bg">
-        <img src="images/water_bg.jpg" alt="" />
-      </div>
+<section class="page-title centred">
+    <div class="page-title-bg"><img src="{{ asset('public/front/images/water_bg.jpg') }}" alt=""></div>
+    <div class="auto-container"><div class="content-box"><h3>Subscription plans</h3></div></div>
+    <div class="page-title-wave"><img src="{{ asset('public/front/images/wave.png') }}" alt="wave"></div>
+</section>
 
-      <div class="auto-container">
-        <div class="content-box">
-          <h3>Subscription</h3>
-        </div>
-      </div>
-
-      <!-- Bottom Wave Image -->
-      <div class="page-title-wave">
-        <img src="images/wave.png" alt="wave" />
-      </div>
-    </section>
-    <!-- End Page Title -->
-
- 
-    <section class="pricing-section bg-white">
-      <div class="auto-container">
-        <!-- Top Heading -->
+<section class="pricing-section bg-white">
+    <div class="auto-container">
         <div class="pricing-header">
-          <div class="pricing-tag">
-            SIMPLE <span>•</span> FLEXIBLE <span>•</span> POWERFUL
-          </div>
-
-          <h3>Choose Your <span>Plan</span></h3>
-
-          <p>
-            Get the right tools and features to manage your water business
-            <br class="d-none d-md-block" />
-            smarter, faster and more efficiently.
-          </p>
-
-          <!-- Monthly / Yearly -->
-          <!-- <div class="pricing-toggle">
-                    <button class="active">Monthly</button>
-                    <button>Yearly</button>
-                </div> -->
+            <div class="pricing-tag">SIMPLE <span>•</span> FLEXIBLE <span>•</span> POWERFUL</div>
+            <h3>Choose Your <span>Plan</span></h3>
+            <p>Plans are billed monthly in CAD. Applicable tax is calculated and added securely at Stripe checkout.</p>
         </div>
 
-        <!-- Pricing Cards -->
+        @if (session('status'))
+            <div class="alert alert-success" role="status">{{ session('status') }}</div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+        @endif
+
         <div class="pricing-wrapper">
-          <!-- Starter Plan -->
-          <div class="pricing-card">
-            <div class="plan-icon">
-              <img src="images/bottle_2.png" alt="Water" />
-            </div>
+            @forelse ($plans as $plan)
+                <article class="pricing-card {{ $plan->name === 'Premium' ? 'popular' : '' }} {{ $selectedPlanId === $plan->id ? 'border border-primary' : '' }}">
+                    @if ($plan->name === 'Premium')
+                        <div class="popular-badge">★ &nbsp; PREMIUM</div>
+                    @endif
+                    <div class="plan-icon">
+                        <img src="{{ asset('public/front/images/bottle_2.png') }}" alt="">
+                    </div>
+                    <h2>{{ $plan->name }}</h2>
+                    @if ($plan->description)
+                        <p>{{ $plan->description }}</p>
+                    @endif
+                    <div class="price">
+                        <strong>CAD {{ number_format((float) $plan->amount, 2) }}</strong>
+                        <span>/ {{ $plan->billing_cycle === 'yearly' ? 'year' : ($plan->billing_cycle === 'quarterly' ? 'quarter' : 'month') }}</span>
+                    </div>
+                    <ul class="pricing-list">
+                        @foreach ($plan->features ?? [] as $feature)
+                            <li><span class="check">✓</span><span>{{ $feature }}</span></li>
+                        @endforeach
+                        @if ($plan->water_monitoring_enabled)
+                            <li><span class="check">✓</span><span>Premium water monitoring access</span></li>
+                        @endif
+                    </ul>
 
-            <h2>Starter Plan</h2>
-
-            <div class="price">
-              <strong>CAD 249</strong>
-              <span>/ month</span>
-            </div>
-
-            <ul class="pricing-list">
-              <li>
-                <span class="check">✓</span>
-                <span>Chemical kit support</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Compliance checklist</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Certified service access</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Equipment health checklist</span>
-              </li>
-              <li>
-                <span class="check">✓</span>
-                <span>Monthly water quality assessment</span>
-              </li>
-            </ul>
-
-            <a href="{{ route('signup') }}" class="pricing-btn">
-              START NOW
-              <span>→</span>
-            </a>
-          </div>
-
-          <!-- Pro Plan -->
-          <div class="pricing-card popular">
-            <div class="popular-badge">★ &nbsp; MOST POPULAR</div>
-
-            <div class="plan-icon">
-              <img src="images/bottle_2.png" alt="Water" />
-            </div>
-
-            <h2>Pro Plan</h2>
-
-            <div class="price">
-              <strong>CAD 499</strong>
-              <span>/ month</span>
-            </div>
-
-            <ul class="pricing-list">
-              <li>
-                <span class="check">✓</span>
-                <span>Sensor integration</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Water quality monitoring dashboard</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Compliance alerts &amp; notifications</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>ESG audit reports</span>
-              </li>
-
-              <li>
-                <span class="check">✓</span>
-                <span>Multi-site dashboard</span>
-              </li>
-            </ul>
-
-            <a href="{{ route('signup') }}" class="pricing-btn">
-              START NOW
-              <span>→</span>
-            </a>
-          </div>
+                    @auth
+                        <form method="POST" action="{{ route('user.subscription.checkout', $plan) }}">
+                            @csrf
+                            <button class="pricing-btn" type="submit">
+                                Purchase {{ $plan->name }}
+                                <span>→</span>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('signup', ['plan_id' => $plan->id]) }}" class="pricing-btn">
+                            Sign up to purchase
+                            <span>→</span>
+                        </a>
+                    @endauth
+                </article>
+            @empty
+                <div class="alert alert-info w-100">There are no subscription plans available at this time.</div>
+            @endforelse
         </div>
-      </div>
-    </section>
-    
+
+        <p class="text-muted text-center mt-4">
+            Payments are processed by Stripe. A subscription is activated only after Stripe confirms payment.
+        </p>
+    </div>
+</section>
+
 @include('include.footer')

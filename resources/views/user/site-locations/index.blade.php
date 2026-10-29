@@ -25,7 +25,13 @@
                         <tr>
                             <td><strong>{{ $site->name }}</strong><div class="small text-muted">{{ $site->site_code ?: 'No site code' }}</div></td>
                             <td>{{ $site->city }}, {{ $site->province }}<div class="small text-muted">{{ $site->country }}</div></td>
-                            <td>{{ $site->water_readings_count }}</td>
+                            <td>
+                                @if ($hasWaterMonitoringAccess)
+                                    {{ $site->water_readings_count }}
+                                @else
+                                    <a href="{{ route('user.subscription') }}">Premium feature</a>
+                                @endif
+                            </td>
                             <td>{{ $site->chemical_usages_count }}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-sm btn-outline-primary" href="{{ route('user.site-locations.view', $site) }}">View</a>

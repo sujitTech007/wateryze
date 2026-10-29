@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Subscription extends Model
 {
     protected $fillable = [
+        'payment_attempt_id',
+        'stripe_subscription_id',
+        'water_monitoring_enabled',
+        'features',
         'user_id',
         'subscription_plan_id',
         'billing_cycle',
@@ -30,6 +34,8 @@ class Subscription extends Model
             'end_date' => 'date',
             'renewal_date' => 'date',
             'auto_renew' => 'boolean',
+            'water_monitoring_enabled' => 'boolean',
+            'features' => 'array',
         ];
     }
 
@@ -41,6 +47,11 @@ class Subscription extends Model
     public function plan(): BelongsTo
     {
         return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
+    }
+
+    public function paymentAttempt(): BelongsTo
+    {
+        return $this->belongsTo(PaymentAttempt::class);
     }
 
     public function invoices(): HasMany
