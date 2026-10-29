@@ -8,6 +8,9 @@
 
             <form action="{{ route('signup.store') }}" method="POST">
                 @csrf
+                @if ($planId)
+                    <input type="hidden" name="plan_id" value="{{ $planId }}">
+                @endif
 
                 <div class="row">
                     <div class="col-md-6 mb-2">

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubscriptionPlan;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class FrontController extends Controller
 {
@@ -26,9 +28,15 @@ class FrontController extends Controller
         return view('industry');
     }
 
-    public function subscription(): View
+    public function subscription(Request $request): View
     {
-        return view('subscription');
+        return view('subscription', [
+            'plans' => SubscriptionPlan::query()
+                ->where('status', 'active')
+                ->orderBy('amount')
+                ->get(),
+            'selectedPlanId' => $request->integer('plan_id'),
+        ]);
     }
 
     public function contact(): View

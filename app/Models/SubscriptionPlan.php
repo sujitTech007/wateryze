@@ -10,6 +10,8 @@ class SubscriptionPlan extends Model
     protected $fillable = [
         'name',
         'description',
+        'features',
+        'water_monitoring_enabled',
         'amount',
         'billing_cycle',
         'status',
@@ -17,11 +19,20 @@ class SubscriptionPlan extends Model
 
     protected function casts(): array
     {
-        return ['amount' => 'decimal:2'];
+        return [
+            'amount' => 'decimal:2',
+            'features' => 'array',
+            'water_monitoring_enabled' => 'boolean',
+        ];
     }
 
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function paymentAttempts(): HasMany
+    {
+        return $this->hasMany(PaymentAttempt::class);
     }
 }

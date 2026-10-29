@@ -85,6 +85,31 @@ Dashboard records belong to the signed-in account. Users can create and manage t
 
 Sensor APIs are fetched when a user requests a sync; background polling, arbitrary private-network device access, outbound email, and enterprise integrations are not enabled. Configure site-specific thresholds and consult the applicable regulator; dashboard comparisons do not provide regulatory certification.
 
+### Subscription payments
+
+The Basic and Premium plans are seeded by the subscription-payment migration at CAD 249/month and CAD 499/month. Premium includes all Basic features plus IoT sensor access, real-time compliance, automated audit reports, and ESG tracking. Plan prices are tax-exclusive; Stripe Checkout applies automatic tax and collects a billing address.
+
+Configure these values in `.env` before enabling purchases:
+
+```dotenv
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+Enable Stripe Tax for the Stripe account, then configure a webhook pointing to `https://your-domain.example/stripe/webhook` for these events:
+
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+- `checkout.session.async_payment_failed`
+- `checkout.session.expired`
+- `invoice.paid`
+- `invoice.payment_failed`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+
+Keep the webhook signing secret private and use HTTPS in production. A checkout return alone does not grant access: the server retrieves the Checkout Session from Stripe and activates a subscription only after confirming the payment and matching it to the pending plan attempt. The signed webhook provides event reconciliation and recurring billing updates. Premium water-monitoring routes require an active subscription linked to a successfully paid attempt; payment failures and expired/cancelled subscriptions do not grant access.
+
 Run the feature and unit tests with:
 
 ```sh

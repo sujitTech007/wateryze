@@ -9,16 +9,19 @@ use App\Services\SensorApiException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Tests\Feature\Concerns\CreatesPaidSubscription;
 use Tests\TestCase;
 
 class UserDashboardTest extends TestCase
 {
+    use CreatesPaidSubscription;
     use RefreshDatabase;
 
     public function test_report_pages_are_read_only_and_work_with_empty_and_saved_api_readings(): void
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $this->createPaidSubscription($user);
         $this->actingAs($user);
 
         $this->get(route('user.reports.index'))
@@ -65,6 +68,7 @@ class UserDashboardTest extends TestCase
     {
         $user = User::factory()->create();
         $site = $user->sites()->create($this->siteData());
+        $this->createPaidSubscription($user);
         $this->actingAs($user);
 
         $this->post(route('user.water-monitoring.apis.store'), [
@@ -99,6 +103,7 @@ class UserDashboardTest extends TestCase
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $this->createPaidSubscription($user);
         $this->actingAs($user);
 
         $this->post(route('user.site-locations.store'), $this->siteData())
@@ -240,6 +245,7 @@ class UserDashboardTest extends TestCase
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $this->createPaidSubscription($user);
         $this->actingAs($user);
 
         $this->get(route('user.site-locations'))
@@ -311,6 +317,7 @@ class UserDashboardTest extends TestCase
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $this->createPaidSubscription($user);
         $this->actingAs($user);
 
         $site = $user->sites()->create($this->siteData());

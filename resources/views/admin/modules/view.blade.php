@@ -29,7 +29,21 @@
                 @endphp
                 <div class="col-md-6 p-3 border-bottom">
                     <dt class="text-muted small">{{ $field['label'] }}</dt>
-                    <dd class="mb-0">{{ $value ?? '—' }}</dd>
+                    @if (($field['type'] ?? null) === 'repeatable' && is_array($value))
+                        @if ($value === [])
+                            <dd class="mb-0">No features added</dd>
+                        @else
+                            <dd class="mb-0">
+                                <ul class="mb-0 ps-3">
+                                    @foreach ($value as $feature)
+                                        <li>{{ $feature }}</li>
+                                    @endforeach
+                                </ul>
+                            </dd>
+                        @endif
+                    @else
+                        <dd class="mb-0">{{ $value ?? '—' }}</dd>
+                    @endif
                 </div>
             @endforeach
             @if ($module['key'] === 'invoices')

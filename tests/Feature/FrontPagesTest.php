@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class FrontPagesTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_public_pages_render_with_the_shared_navigation_and_footer(): void
     {
         $routes = [

@@ -8,6 +8,9 @@
 
             <form action="{{ route('login.store') }}" method="POST">
                 @csrf
+                @if ($planId)
+                    <input type="hidden" name="plan_id" value="{{ $planId }}">
+                @endif
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>

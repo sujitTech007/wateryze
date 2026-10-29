@@ -20,7 +20,14 @@
                 <dt class="col-sm-4">Treatment type</dt><dd class="col-sm-8">{{ $site->treatment_type ?: 'Not specified' }}</dd>
                 <dt class="col-sm-4">Treatment capacity</dt><dd class="col-sm-8">{{ $site->capacity ? $site->capacity.' m³/day' : 'Not specified' }}</dd>
                 <dt class="col-sm-4">Coordinates</dt><dd class="col-sm-8">{{ $site->latitude ?? '—' }}, {{ $site->longitude ?? '—' }}</dd>
-                <dt class="col-sm-4">Water readings</dt><dd class="col-sm-8">{{ $site->water_readings_count }}</dd>
+                <dt class="col-sm-4">Water readings</dt>
+                <dd class="col-sm-8">
+                    @if ($hasWaterMonitoringAccess)
+                        {{ $site->water_readings_count }}
+                    @else
+                        <a href="{{ route('user.subscription') }}">Available with Premium</a>
+                    @endif
+                </dd>
                 <dt class="col-sm-4">Chemical records</dt><dd class="col-sm-8">{{ $site->chemical_usages_count }}</dd>
                 <dt class="col-sm-4">Reminders</dt><dd class="col-sm-8">{{ $site->reminders_count }}</dd>
             </dl>
@@ -28,6 +35,7 @@
     </section>
 
     <div class="row g-4">
+        @if ($hasWaterMonitoringAccess)
         <section class="col-lg-4">
             <div class="card h-100">
                 <div class="card-header bg-white"><h2 class="h6 mb-0">Recent readings</h2></div>
@@ -40,6 +48,7 @@
                 </ul>
             </div>
         </section>
+        @endif
         <section class="col-lg-4">
             <div class="card h-100">
                 <div class="card-header bg-white"><h2 class="h6 mb-0">Recent chemical usage</h2></div>
