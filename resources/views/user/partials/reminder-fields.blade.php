@@ -1,6 +1,58 @@
+
 @php($reminder = $reminder ?? null)
-<div class="col-md-6"><label class="form-label">Task <span class="text-danger">*</span></label><input class="form-control" name="title" maxlength="255" value="{{ old('title', $reminder?->title) }}" required></div>
-<div class="col-md-6"><label class="form-label">Site</label><select class="form-select" name="site_id"><option value="">All sites</option>@foreach ($sites as $site)<option value="{{ $site->id }}" @selected((string)old('site_id', $reminder?->site_id) === (string)$site->id)>{{ $site->name }}</option>@endforeach</select></div>
-<div class="col-md-6"><label class="form-label">Due date <span class="text-danger">*</span></label><input class="form-control" type="datetime-local" name="due_at" value="{{ old('due_at', $reminder?->due_at?->format('Y-m-d\TH:i')) }}" required></div>
-<div class="col-md-6"><label class="form-label">Status <span class="text-danger">*</span></label><select class="form-select" name="status" required>@foreach (['scheduled', 'completed', 'cancelled'] as $status)<option value="{{ $status }}" @selected(old('status', $reminder?->status ?? 'scheduled') === $status)>{{ ucfirst($status) }}</option>@endforeach</select></div>
-<div class="col-12"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="2" maxlength="5000">{{ old('description', $reminder?->description) }}</textarea></div>
+
+<div class="row g-3">
+
+    <div class="col-md-6">
+        <label class="form-label">Task <span class="text-danger">*</span></label>
+        <input
+            class="form-control"
+            name="title"
+            maxlength="255"
+            value="{{ old('title', $reminder?->title) }}"
+            required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Site</label>
+        <select class="form-select" name="site_id">
+            <option value="">All sites</option>
+            @foreach ($sites as $site)
+                <option value="{{ $site->id }}" @selected((string)old('site_id', $reminder?->site_id) === (string)$site->id)>
+                    {{ $site->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Due date <span class="text-danger">*</span></label>
+        <input
+            class="form-control"
+            type="datetime-local"
+            name="due_at"
+            value="{{ old('due_at', $reminder?->due_at?->format('Y-m-d\TH:i')) }}"
+            required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Status <span class="text-danger">*</span></label>
+        <select class="form-select" name="status" required>
+            @foreach (['scheduled', 'completed', 'cancelled'] as $status)
+                <option value="{{ $status }}" @selected(old('status', $reminder?->status ?? 'scheduled') === $status)>
+                    {{ ucfirst($status) }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea
+            class="form-control"
+            name="description"
+            rows="2"
+            maxlength="5000">{{ old('description', $reminder?->description) }}</textarea>
+    </div>
+
+</div>

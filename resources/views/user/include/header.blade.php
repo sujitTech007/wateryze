@@ -19,6 +19,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('public/user/css/style.css?v=2.0') }}">
+  
 </head>
 
 <body>
@@ -127,29 +128,53 @@
                             <span class="notification-badge">{{ $unreadNotifications > 99 ? '99+' : $unreadNotifications }}</span>
                         @endif
                     </a>
-                    <div class="nav-item profile-wrapper">
-                        <button class="nav-link profile-btn" id="profileBtn" type="button" aria-expanded="false" aria-controls="profileDropdown">
-                            <span class="profile-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->first_name ?: auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->last_name ?? '', 0, 1)) }}</span>
-                            <span class="profile-name d-none d-sm-inline">{{ trim((auth()->user()->first_name ?: auth()->user()->name).' '.(auth()->user()->last_name ?? '')) }}</span>
-                            <span class="badge text-bg-light">{{ ucfirst(auth()->user()->role ?? 'user') }}</span>
-                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                        <div class="profile-dropdown" id="profileDropdown">
-                            <a href="{{ route('user.profile') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i> My Profile
-                            </a>
-                            <a href="{{ route('user.settings') }}" class="dropdown-item">
-                                <i class="fas fa-lock"></i> Change Password
-                            </a>
-                            <hr class="dropdown-divider">
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger border-0 bg-transparent w-100 text-start">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                   
+
+<div class="nav-item dropdown profile-wrapper">
+    <button
+        class="nav-link profile-btn"
+        id="profileBtn"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+
+        <!-- Keep your existing avatar, name and role spans here -->
+        <span class="profile-avatar" aria-hidden="true">
+            {{ strtoupper(substr(auth()->user()->first_name ?: auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->last_name ?? '', 0, 1)) }}
+        </span>
+
+        <span class="profile-name d-none d-sm-inline">
+            {{ trim((auth()->user()->first_name ?: auth()->user()->name).' '.(auth()->user()->last_name ?? '')) }}
+        </span>
+
+        <span class="badge text-bg-light">
+            {{ ucfirst(auth()->user()->role ?? 'user') }}
+        </span>
+
+        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+    </button>
+
+    <div class="dropdown-menu dropdown-menu-end" id="profileDropdown">
+        <a href="{{ route('user.profile') }}" class="dropdown-item">
+            <i class="fas fa-user"></i> My Profile
+        </a>
+
+        <a href="{{ route('user.settings') }}" class="dropdown-item">
+            <i class="fas fa-lock"></i> Change Password
+        </a>
+
+        <hr class="dropdown-divider">
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+
                 </div>
             </nav>
             <!-- ========== TOP NAVBAR END ========== -->

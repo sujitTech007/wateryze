@@ -7,5 +7,7 @@
     <!-- Custom JS -->
     <script src="{{ asset('user/js/script.js?v=2.0') }}" defer></script>
 
+
+
 </body>
 </html>
