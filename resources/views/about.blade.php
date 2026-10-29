@@ -537,16 +537,13 @@
     <!-- filtration-process end -->
 
 
-
-    <!-- composition-section -->
-
-    <section class="composition-section bg-color-1">
+<section class="composition-section bg-color-1">
 
         <div class="border-shap">
 
-            <div class="border-1" style="background-image: url({{ asset('public/front/images/border-1.png') }});"></div>
+            <div class="border-1" style="background-image: url(images/border-1.png);"></div>
 
-            <div class="border-2" style="background-image: url({{ asset('public/front/images/border-2.png') }});"></div>
+            <div class="border-2" style="background-image: url(images/border-2.png);"></div>
 
         </div>
 
@@ -572,8 +569,7 @@
 
 
 
-
-                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
+                                    <img src="images/water_drop_1.png" alt="">
 
                                 </figure>
 
@@ -583,7 +579,7 @@
 
                                 <div class="text">Our platform ensures you’re always inspection-ready with automated
 
-                                    reports and accurate chemical...
+                                    reports and accurate chemical...</div>
 
                             </div>
 
@@ -593,11 +589,11 @@
 
 
 
-                                    <img src="{{ asset('public/front/images/water_drop_1.png') }}" alt="">
+                                    <img src="images/water_drop_1.png" alt="">
 
                                 </figure>
 
-                                <h3>Reduce chemical <br>waste & impact</h3>
+                                <h3>Reduce chemical <br>waste &amp; impact</h3>
 
 
 
@@ -617,9 +613,7 @@
 
                             <div class="pattern-bg" style="background-image: url(images/icons/pattern-2.png);"></div>
 
-                            <figure class="image wow slideInUp" data-wow-delay="0ms" data-wow-duration="1500ms"><img
-
-                                    src="images/water_glass_1.png" alt="" style="width: 215px; margin-bottom: 20px;">
+                            <figure class="image wow slideInUp" data-wow-delay="0ms" data-wow-duration="1500ms"><img src="images/water_glass_1.png" alt="" style="width: 215px; margin-bottom: 20px;">
 
                             </figure>
 
@@ -684,10 +678,6 @@
         </div>
 
     </section>
-
-    <!-- composition-section end -->
-
-
 
 
 

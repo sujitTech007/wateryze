@@ -26,8 +26,7 @@
                     <div class="input-group">
                         <input id="password" name="password" type="password"
                             class="form-control @error('password') is-invalid @enderror" autocomplete="current-password" required>
-                        <button class="btn btn-outline-secondary" type="button" data-password-toggle="password"
-                            aria-label="Show password" aria-pressed="false">Show</button>
+                       <span style="position:absolute; right:25px; top: 15px; cursor:pointer;">👁</span>
                     </div>
                     @error('password')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
