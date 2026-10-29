@@ -139,18 +139,13 @@
         aria-expanded="false">
 
         <!-- Keep your existing avatar, name and role spans here -->
-        <span class="profile-avatar" aria-hidden="true">
-            {{ strtoupper(substr(auth()->user()->first_name ?: auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->last_name ?? '', 0, 1)) }}
-        </span>
+       
 
         <span class="profile-name d-none d-sm-inline">
             {{ trim((auth()->user()->first_name ?: auth()->user()->name).' '.(auth()->user()->last_name ?? '')) }}
         </span>
 
-        <span class="badge text-bg-light">
-            {{ ucfirst(auth()->user()->role ?? 'user') }}
-        </span>
-
+     
         <i class="fas fa-chevron-down" aria-hidden="true"></i>
     </button>
 
