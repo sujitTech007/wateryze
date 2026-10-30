@@ -21,6 +21,14 @@
                         <p style="margin:0 0 16px;">Hello {{ $customer->first_name ?: $customer->name }},</p>
                         <p style="margin:0 0 24px;line-height:1.6;">Thank you for choosing Wateryze. Stripe confirmed your payment, and your {{ $subscription->plan?->name ?? 'subscription' }} plan is now active.</p>
 
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 24px;background:#f0f7fc;border:1px solid #d9e8f5;border-radius:8px;">
+                            <tr><td style="padding:16px 18px;">
+                                <div style="font-size:12px;color:#627187;text-transform:uppercase;letter-spacing:.8px;">Your invoice</div>
+                                <div style="margin-top:5px;font-size:18px;font-weight:bold;color:#073b66;">{{ $invoice->invoice_number }}</div>
+                                <div style="margin-top:4px;font-size:13px;color:#627187;">A PDF copy is attached to this email.</div>
+                            </td></tr>
+                        </table>
+
                         <h2 style="margin:0 0 12px;font-size:17px;">Payment summary</h2>
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:14px;">
                             <tr><td style="padding:9px 0;border-bottom:1px solid #e8edf3;">Plan</td><td align="right" style="padding:9px 0;border-bottom:1px solid #e8edf3;">{{ $subscription->plan?->name ?? 'Subscription' }}</td></tr>
@@ -48,7 +56,8 @@
 
                         <p style="margin:0 0 22px;line-height:1.6;">Your subscription renews automatically unless you cancel before the next billing date. You can review your subscription and payment history from your account.</p>
                         <p style="margin:0 0 26px;">
-                            <a href="{{ route('user.subscription') }}" style="display:inline-block;padding:12px 20px;border-radius:6px;background:#0876b9;color:#fff;text-decoration:none;font-weight:bold;">View billing details</a>
+                            <a href="{{ route('user.invoices.download', $invoice) }}" style="display:inline-block;padding:12px 20px;border-radius:6px;background:#0876b9;color:#fff;text-decoration:none;font-weight:bold;">Download your invoice</a>
+                            <a href="{{ route('user.subscription') }}" style="display:inline-block;margin-left:8px;padding:12px 20px;border:1px solid #0876b9;border-radius:6px;color:#0876b9;text-decoration:none;font-weight:bold;">View billing details</a>
                         </p>
                         <p style="margin:0;line-height:1.6;">Questions about this payment? Reply to this email and our team will be happy to help.</p>
                     </td>

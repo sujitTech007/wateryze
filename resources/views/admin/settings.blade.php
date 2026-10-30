@@ -36,7 +36,8 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="contact_phone">Contact phone</label>
-                        <input class="form-control" id="contact_phone" name="contact_phone" type="tel" maxlength="40" value="{{ old('contact_phone', $settings->contact_phone) }}">
+                        <input class="form-control" id="contact_phone" name="contact_phone" type="tel" maxlength="40" value="{{ old('contact_phone', $settings->contact_phone) }}" data-phone-picker>
+                        <div class="text-danger small" data-phone-error role="alert"></div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="timezone">Timezone</label>

@@ -41,8 +41,12 @@
                             <td>{{ $reminder->due_at->format('M j, Y g:i A') }}</td>
                             <td>{{ ucfirst($reminder->status) }}</td>
                             <td class="text-nowrap">
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.schedule.view', $reminder) }}">View</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.schedule.edit', $reminder) }}">Edit</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.schedule.view', $reminder) }}" aria-label="View reminder" title="View">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.schedule.edit', $reminder) }}" aria-label="Edit reminder" title="Edit">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
                             </td>
                         </tr>
                     @empty

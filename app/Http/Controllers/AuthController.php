@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeUser;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class AuthController extends Controller
 {
@@ -88,6 +92,19 @@ class AuthController extends Controller
             'phone' => $validated['phone'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        try {
+            Mail::to($user->email)->send(new WelcomeUser($user));
+        } catch (TransportExceptionInterface $exception) {
+            Log::error('Welcome email could not be delivered after registration.', [
+                'user_id' => $user->id,
+                'reason' => $exception->getMessage(),
+            ]);
+            $request->session()->flash(
+                'warning',
+                'Your account was created, but we could not send the welcome email. Please check your mail settings or contact support.',
+            );
+        }
 
         Auth::guard('admin')->logout();
         Auth::login($user);

@@ -60,7 +60,7 @@ class SubscriptionPaymentProcessor
             throw new StripePaymentException('Stripe returned an unexpected total. Tax is not enabled for this checkout.');
         }
 
-        $subscription = DB::transaction(function () use ($attempt, $checkout, $subscriptionId, $totalCents): ?Subscription {
+        $subscription = DB::transaction(function () use ($attempt, $checkout, $subscriptionId, $totalCents, $subtotalCents): ?Subscription {
             $lockedAttempt = PaymentAttempt::query()->lockForUpdate()->findOrFail($attempt->id);
             if ($lockedAttempt->status === 'paid') {
                 return $lockedAttempt->subscription;
@@ -98,6 +98,30 @@ class SubscriptionPaymentProcessor
                 'total_amount_cents' => $totalCents,
             ]);
 
+            $paidAt = $lockedAttempt->paid_at;
+            $invoiceNumber = 'WZ-SUB-'.str_pad((string) $lockedAttempt->id, 10, '0', STR_PAD_LEFT);
+            $customer = $subscription->user;
+            $lockedAttempt->invoice()->create([
+                'user_id' => $lockedAttempt->user_id,
+                'subscription_id' => $subscription->id,
+                'invoice_number' => $invoiceNumber,
+                'invoice_date' => $paidAt->toDateString(),
+                'due_date' => $paidAt->toDateString(),
+                'amount' => number_format($subtotalCents / 100, 2, '.', ''),
+                'tax_amount' => '0.00',
+                'total' => number_format($totalCents / 100, 2, '.', ''),
+                'status' => 'paid',
+                'billing_email' => $customer->email,
+                'phone' => $customer->full_phone,
+                'billing_address' => $customer->address,
+                'city' => $customer->city,
+                'province' => $customer->province,
+                'country' => $customer->country,
+                'postal_code' => $customer->postal_code,
+                'notes' => 'Initial subscription payment processed by Stripe. Reference: '.$checkout['id'],
+                'paid_at' => $paidAt,
+            ]);
+
             return $subscription;
         });
 
@@ -112,7 +136,7 @@ class SubscriptionPaymentProcessor
     {
         $attempt = DB::transaction(function () use ($attemptId): ?PaymentAttempt {
             $lockedAttempt = PaymentAttempt::query()
-                ->with(['user', 'subscription.plan'])
+                ->with(['user', 'subscription.plan', 'invoice'])
                 ->lockForUpdate()
                 ->findOrFail($attemptId);
 
@@ -127,15 +151,28 @@ class SubscriptionPaymentProcessor
                 return null;
             }
 
+            if ($lockedAttempt->invoice === null || $lockedAttempt->subscription === null) {
+                Log::error('Paid subscription is missing its invoice or subscription record; receipt email was not sent.', [
+                    'payment_attempt_id' => $lockedAttempt->id,
+                    'user_id' => $lockedAttempt->user_id,
+                ]);
+
+                return null;
+            }
+
             $lockedAttempt->update([
                 'receipt_status' => 'sending',
                 'receipt_started_at' => now(),
             ]);
+            $lockedAttempt->invoice->update([
+                'receipt_status' => 'sending',
+                'receipt_started_at' => now(),
+            ]);
 
-            return $lockedAttempt->fresh(['user', 'subscription.plan']);
+            return $lockedAttempt->fresh(['user', 'subscription.plan', 'invoice']);
         });
 
-        if ($attempt === null || $attempt->subscription === null) {
+        if ($attempt === null) {
             return;
         }
 
@@ -143,6 +180,7 @@ class SubscriptionPaymentProcessor
             Mail::to($attempt->user->email)->send(new SubscriptionPaymentReceipt(
                 customer: $attempt->user,
                 subscription: $attempt->subscription,
+                invoice: $attempt->invoice->load('user', 'subscription.plan', 'paymentAttempt'),
                 paymentReference: $attempt->stripe_checkout_session_id,
                 currency: $attempt->currency,
                 paidAt: $attempt->paid_at,
@@ -150,6 +188,10 @@ class SubscriptionPaymentProcessor
             ));
         } catch (TransportExceptionInterface $exception) {
             $attempt->update(['receipt_status' => 'failed']);
+            $attempt->invoice->update([
+                'receipt_status' => 'failed',
+                'receipt_started_at' => null,
+            ]);
             Log::error('Subscription payment receipt email could not be delivered.', [
                 'payment_attempt_id' => $attempt->id,
                 'user_id' => $attempt->user_id,
@@ -160,6 +202,11 @@ class SubscriptionPaymentProcessor
         }
 
         $attempt->update([
+            'receipt_status' => 'sent',
+            'receipt_started_at' => null,
+            'receipt_sent_at' => now(),
+        ]);
+        $attempt->invoice->update([
             'receipt_status' => 'sent',
             'receipt_started_at' => null,
             'receipt_sent_at' => now(),
@@ -359,6 +406,7 @@ class SubscriptionPaymentProcessor
             Mail::to($invoice->user->email)->send(new SubscriptionPaymentReceipt(
                 customer: $invoice->user,
                 subscription: $invoice->subscription,
+                invoice: $invoice->load('paymentAttempt'),
                 paymentReference: $paymentReference,
                 currency: preg_match('/^[A-Z]{3}$/', $currency) ? $currency : 'CAD',
                 paidAt: $invoice->paid_at ?? now(),

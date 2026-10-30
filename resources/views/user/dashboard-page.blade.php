@@ -204,16 +204,23 @@
                 <div class="col-md-6"><label class="form-label" for="first_name">First name <span class="text-danger">*</span></label><input id="first_name" class="form-control" name="first_name" value="{{ old('first_name', $profile->first_name) }}" autocomplete="given-name" required></div>
                 <div class="col-md-6"><label class="form-label" for="last_name">Last name <span class="text-danger">*</span></label><input id="last_name" class="form-control" name="last_name" value="{{ old('last_name', $profile->last_name) }}" autocomplete="family-name" required></div>
                 <div class="col-md-6"><label class="form-label" for="email">Email <span class="text-danger">*</span></label><input id="email" class="form-control" type="email" name="email" value="{{ old('email', $profile->email) }}" autocomplete="email" required></div>
-                <div class="col-md-6"><label class="form-label" for="phone">Phone</label><input id="phone" class="form-control" type="tel" name="phone" value="{{ old('phone', $profile->phone) }}" autocomplete="tel-national"></div>
-                <div class="col-md-3"><label class="form-label" for="country_code">Phone country code</label><input id="country_code" class="form-control" name="country_code" value="{{ old('country_code', $profile->country_code) }}" placeholder="+1"></div>
-                <div class="col-md-3"><label class="form-label" for="phone_country">Phone country (ISO)</label><input id="phone_country" class="form-control" name="phone_country" value="{{ old('phone_country', $profile->phone_country) }}" maxlength="2" placeholder="ca"></div>
+                <div class="col-md-6">
+                    <label class="form-label" for="phone">Phone</label>
+                    <input id="phone" class="form-control" type="tel" name="phone" value="{{ old('phone', $profile->phone) }}" autocomplete="tel-national" data-phone-picker data-phone-code="country_code" data-phone-country="phone_country" aria-describedby="phone-error">
+                    <input id="country_code" name="country_code" type="hidden" value="{{ old('country_code', $profile->country_code ?? '+1') }}">
+                    <input id="phone_country" name="phone_country" type="hidden" value="{{ old('phone_country', $profile->phone_country ?? 'ca') }}">
+                    <div class="text-danger small" id="phone-error" data-phone-error role="alert"></div>
+                    @error('phone')<div class="text-danger small">{{ $message }}</div>@enderror
+                    @error('country_code')<div class="text-danger small">{{ $message }}</div>@enderror
+                    @error('phone_country')<div class="text-danger small">{{ $message }}</div>@enderror
+                </div>
                 <div class="col-md-6"><label class="form-label" for="company">Company</label><input id="company" class="form-control" name="company" value="{{ old('company', $profile->company) }}"></div>
                 <div class="col-md-6"><label class="form-label" for="industry">Industry</label><input id="industry" class="form-control" name="industry" value="{{ old('industry', $profile->industry) }}"></div>
-                <div class="col-md-6"><label class="form-label" for="address">Address</label><input id="address" class="form-control" name="address" value="{{ old('address', $profile->address) }}" autocomplete="street-address"></div>
-                <div class="col-md-6"><label class="form-label" for="city">City</label><input id="city" class="form-control" name="city" value="{{ old('city', $profile->city) }}" autocomplete="address-level2"></div>
-                <div class="col-md-4"><label class="form-label" for="province">Province/state</label><input id="province" class="form-control" name="province" value="{{ old('province', $profile->province) }}" autocomplete="address-level1"></div>
-                <div class="col-md-4"><label class="form-label" for="postal_code">Postal/ZIP code</label><input id="postal_code" class="form-control" name="postal_code" value="{{ old('postal_code', $profile->postal_code) }}" autocomplete="postal-code"></div>
-                <div class="col-md-4"><label class="form-label" for="country">Country</label><input id="country" class="form-control" name="country" value="{{ old('country', $profile->country) }}" autocomplete="country-name"></div>
+                <div class="col-md-6"><label class="form-label" for="address">Address</label><input id="address" class="form-control" name="address" value="{{ old('address', $profile->address) }}" autocomplete="street-address" data-google-address-autocomplete></div>
+                <div class="col-md-6"><label class="form-label" for="city">City</label><input id="city" class="form-control" name="city" value="{{ old('city', $profile->city) }}" autocomplete="address-level2" data-google-address-component="city"></div>
+                <div class="col-md-4"><label class="form-label" for="province">Province/state</label><input id="province" class="form-control" name="province" value="{{ old('province', $profile->province) }}" autocomplete="address-level1" data-google-address-component="province"></div>
+                <div class="col-md-4"><label class="form-label" for="postal_code">Postal/ZIP code</label><input id="postal_code" class="form-control" name="postal_code" value="{{ old('postal_code', $profile->postal_code) }}" autocomplete="postal-code" data-google-address-component="postal_code"></div>
+                <div class="col-md-4"><label class="form-label" for="country">Country</label><input id="country" class="form-control" name="country" value="{{ old('country', $profile->country) }}" autocomplete="country-name" data-google-address-component="country"></div>
             </div>
             <div class="card-footer bg-white"><button class="btn btn-primary" type="submit">Save profile</button></div>
         </form>

@@ -27,8 +27,12 @@
                             <td>{{ $usage->quantity }} {{ $usage->unit }}</td>
                             <td>{{ $usage->purpose }}</td>
                             <td class="text-nowrap">
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.chemical-kits.view', $usage) }}">View</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.chemical-kits.edit', $usage) }}">Edit</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.chemical-kits.view', $usage) }}" aria-label="View chemical usage" title="View">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.chemical-kits.edit', $usage) }}" aria-label="Edit chemical usage" title="Edit">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
                             </td>
                         </tr>
                     @empty

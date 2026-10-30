@@ -101,10 +101,22 @@ class UserDashboardTest extends TestCase
 
     public function test_user_can_manage_sites_readings_and_export_only_their_own_data(): void
     {
+        config(['services.google_maps.api_key' => 'browser-test-key']);
+
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
         $this->createPaidSubscription($user);
         $this->actingAs($user);
+
+        $this->get(route('user.site-locations.create'))
+            ->assertOk()
+            ->assertSee('address-autocomplete.js', false)
+            ->assertSee('data-google-maps-api-key="browser-test-key"', false)
+            ->assertSee('data-google-address-autocomplete', false)
+            ->assertSee('data-google-address-component="city"', false)
+            ->assertSee('data-google-address-component="province"', false)
+            ->assertSee('data-google-address-component="country"', false)
+            ->assertSee('data-google-address-component="postal_code"', false);
 
         $this->post(route('user.site-locations.store'), $this->siteData())
             ->assertRedirect(route('user.site-locations'))
@@ -261,10 +273,13 @@ class UserDashboardTest extends TestCase
             ->assertOk()
             ->assertSee('North Treatment Plant')
             ->assertSee(route('user.site-locations.view', $site), false)
-            ->assertSee(route('user.site-locations.edit', $site), false);
+            ->assertSee(route('user.site-locations.edit', $site), false)
+            ->assertSee('aria-label="View site"', false)
+            ->assertSee('aria-label="Edit site"', false);
         $this->get(route('user.site-locations.view', $site))
             ->assertOk()
             ->assertSee('Location and facility details')
+            ->assertSee('data-confirm-title="Are you sure you want to delete this site?"', false)
             ->assertSee('Ottawa');
         $this->get(route('user.site-locations.edit', $site))
             ->assertOk()
@@ -277,7 +292,8 @@ class UserDashboardTest extends TestCase
 
         $this->get(route('user.schedule'))
             ->assertOk()
-            ->assertSee('No reminders match this filter');
+            ->assertSee('No reminders match this filter')
+            ->assertSee('dashboard-enhancements.js', false);
         $this->get(route('user.schedule.create'))
             ->assertOk()
             ->assertSee('Create reminder')
@@ -294,7 +310,9 @@ class UserDashboardTest extends TestCase
             ->assertOk()
             ->assertSee('Calibrate sensor')
             ->assertSee(route('user.schedule.view', $reminder), false)
-            ->assertSee(route('user.schedule.edit', $reminder), false);
+            ->assertSee(route('user.schedule.edit', $reminder), false)
+            ->assertSee('aria-label="View reminder"', false)
+            ->assertSee('aria-label="Edit reminder"', false);
         $this->get(route('user.schedule.view', $reminder))
             ->assertOk()
             ->assertSee('Check the pH sensor.')
@@ -475,6 +493,12 @@ class UserDashboardTest extends TestCase
         ]);
         $this->actingAs($user);
 
+        $this->get(route('user.profile'))
+            ->assertOk()
+            ->assertSee('data-phone-picker', false)
+            ->assertSee('data-phone-code="country_code"', false)
+            ->assertSee('name="phone_country"', false);
+
         $this->put(route('user.profile.update'), [
             'first_name' => 'Jordan',
             'last_name' => 'User',
@@ -628,11 +652,16 @@ class UserDashboardTest extends TestCase
             ->assertOk()
             ->assertViewIs('admin.user.index')
             ->assertSee($user->email)
+            ->assertSee('aria-label="View customer"', false)
+            ->assertSee('aria-label="Edit customer"', false)
+            ->assertSee('data-confirm-title="Are you sure you want to delete this customer?"', false)
+            ->assertSee('fa-trash-can', false)
             ->assertDontSee($administrator->email);
         $this->get(route('admin.users.create'))
             ->assertOk()
             ->assertViewIs('admin.user.create')
-            ->assertSee('intlTelInput')
+            ->assertSee('data-phone-picker', false)
+            ->assertSee('dashboard-enhancements.js', false)
             ->assertSee('name="phone_country"', false);
         $this->get(route('admin.users.edit', $user))->assertOk()->assertViewIs('admin.user.edit');
         $this->get(route('admin.users.show', $user))

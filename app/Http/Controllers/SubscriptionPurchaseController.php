@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\PaymentAttempt;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
@@ -10,6 +11,7 @@ use App\Services\StripeCheckoutService;
 use App\Services\StripePaymentException;
 use App\Services\SubscriptionPaymentNotifier;
 use App\Services\SubscriptionPaymentProcessor;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\ConnectionException;
@@ -17,6 +19,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionPurchaseController extends Controller
 {
@@ -39,6 +43,19 @@ class SubscriptionPurchaseController extends Controller
             'invoices' => $invoices,
             'waterMonitoringAccess' => $user->hasWaterMonitoringAccess(),
         ]);
+    }
+
+    public function downloadInvoice(Request $request, int $invoice): Response
+    {
+        $invoiceRecord = Invoice::query()
+            ->with(['user', 'subscription.plan', 'paymentAttempt'])
+            ->where('user_id', $request->user()->id)
+            ->findOrFail($invoice);
+
+        return Pdf::loadView('invoices.pdf', [
+            'invoice' => $invoiceRecord,
+            'currency' => 'CAD',
+        ])->setPaper('a4')->download(Str::slug($invoiceRecord->invoice_number).'.pdf');
     }
 
     public function checkout(

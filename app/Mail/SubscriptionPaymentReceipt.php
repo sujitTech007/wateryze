@@ -2,11 +2,14 @@
 
 namespace App\Mail;
 
+use App\Models\Invoice;
 use App\Models\Subscription;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\CarbonInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -18,6 +21,7 @@ class SubscriptionPaymentReceipt extends Mailable
     public function __construct(
         public User $customer,
         public Subscription $subscription,
+        public Invoice $invoice,
         public string $paymentReference,
         public string $currency,
         public CarbonInterface $paidAt,
@@ -37,5 +41,18 @@ class SubscriptionPaymentReceipt extends Mailable
             view: 'emails.subscription-payment-receipt',
             text: 'emails.subscription-payment-receipt-text',
         );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromData(
+                fn (): string => Pdf::loadView('invoices.pdf', [
+                    'invoice' => $this->invoice,
+                    'currency' => $this->currency,
+                ])->setPaper('a4')->output(),
+                'invoice-'.$this->invoice->invoice_number.'.pdf',
+            )->withMime('application/pdf'),
+        ];
     }
 }

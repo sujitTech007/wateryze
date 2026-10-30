@@ -7,7 +7,9 @@
         <div><h1 class="h3 mb-1">{{ $site->name }}</h1><p class="text-muted mb-0">{{ $site->site_code ?: 'Site details' }}</p></div>
         <div class="d-flex gap-2">
             <a class="btn btn-outline-secondary" href="{{ route('user.site-locations') }}">Back to sites</a>
-            <a class="btn btn-primary" href="{{ route('user.site-locations.edit', $site) }}">Edit site</a>
+            <a class="btn btn-primary" href="{{ route('user.site-locations.edit', $site) }}" aria-label="Edit site" title="Edit">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 
@@ -76,10 +78,13 @@
     </div>
 
     <form class="mt-4" action="{{ route('user.site-locations.destroy', $site) }}" method="POST"
-        onsubmit="return confirm('Delete this site, its readings, and chemical entries? Reminders linked to it will remain without a site.')">
+        data-confirm="Delete this site, its readings, and chemical entries? Reminders linked to it will remain without a site."
+        data-confirm-title="Are you sure you want to delete this site?">
         @csrf
         @method('DELETE')
-        <button class="btn btn-outline-danger" type="submit">Delete site</button>
+        <button class="btn btn-outline-danger" type="submit" aria-label="Delete site" title="Delete site">
+            <i class="fas fa-trash-can" aria-hidden="true"></i>
+        </button>
     </form>
 </main>
 

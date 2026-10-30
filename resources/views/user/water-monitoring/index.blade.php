@@ -57,11 +57,15 @@
                                 @csrf
                                 <button class="btn btn-sm btn-primary" type="submit">Fetch latest data</button>
                             </form>
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.water-monitoring.apis.edit', $connection) }}">Edit</a>
-                            <form action="{{ route('user.water-monitoring.apis.destroy', $connection) }}" method="POST" onsubmit="return confirm('Disconnect this API? Previously imported readings will remain.')">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.water-monitoring.apis.edit', $connection) }}" aria-label="Edit API connection" title="Edit">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                            </a>
+                            <form action="{{ route('user.water-monitoring.apis.destroy', $connection) }}" method="POST" data-confirm="Disconnect this API? Previously imported readings will remain." data-confirm-title="Are you sure you want to disconnect this sensor API?">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger" type="submit">Disconnect</button>
+                                <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Disconnect API connection" title="Disconnect">
+                                    <i class="fas fa-trash-can" aria-hidden="true"></i>
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -111,7 +115,7 @@
                             <td>{{ $reading->ph ?? '—' }}</td>
                             <td>{{ $reading->tds === null ? '—' : $reading->tds.' ppm' }}</td>
                             <td>{{ $reading->complianceStatus($thresholds) }}</td>
-                            <td><a class="btn btn-sm btn-outline-primary" href="{{ route('user.water-monitoring.view', $reading) }}">View</a></td>
+                            <td><a class="btn btn-sm btn-outline-primary" href="{{ route('user.water-monitoring.view', $reading) }}" aria-label="View reading" title="View"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
                         </tr>
                     @empty
                         <tr>

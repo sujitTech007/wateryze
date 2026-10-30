@@ -40,7 +40,7 @@
                             <td>{{ $subscription->water_monitoring_enabled ? 'Included' : 'Not included' }}</td>
                             <td>
                                 @if ($subscription->status === 'active' && $subscription->stripe_subscription_id)
-                                    <form method="POST" action="{{ route('user.subscription.cancel') }}" onsubmit="return confirm('Schedule cancellation at the end of the current billing period?')">
+                                    <form method="POST" action="{{ route('user.subscription.cancel') }}" data-confirm="Schedule cancellation at the end of the current billing period?" data-confirm-title="Are you sure you want to cancel renewal?" data-confirm-button="Yes, schedule cancellation">
                                         @csrf
                                         <button class="btn btn-sm btn-outline-danger" type="submit">Cancel renewal</button>
                                     </form>
@@ -61,7 +61,7 @@
         <div class="card-header bg-white"><h2 class="h5 mb-0">Payment history</h2></div>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead><tr><th>Invoice</th><th>Date</th><th>Total paid</th><th>Status</th></tr></thead>
+                <thead><tr><th>Invoice</th><th>Date</th><th>Total paid</th><th>Status</th><th>Download</th></tr></thead>
                 <tbody>
                     @forelse ($invoices as $invoice)
                         <tr>
@@ -69,9 +69,15 @@
                             <td>{{ $invoice->invoice_date?->format('M j, Y') ?? '—' }}</td>
                             <td>CAD {{ number_format((float) $invoice->total, 2) }}</td>
                             <td>{{ ucfirst($invoice->status) }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.invoices.download', $invoice) }}" aria-label="Download invoice {{ $invoice->invoice_number }} as PDF">
+                                    <i class="fa fa-download" aria-hidden="true"></i>
+                                    <span class="ms-1">Download PDF</span>
+                                </a>
+                            </td>
                         </tr>
                     @empty
-                        <tr><td class="text-center text-muted py-4" colspan="4">No paid invoices are available yet.</td></tr>
+                        <tr><td class="text-center text-muted py-4" colspan="5">No paid invoices are available yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

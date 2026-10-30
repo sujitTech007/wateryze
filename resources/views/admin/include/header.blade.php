@@ -23,6 +23,8 @@
     <!-- Font Awesome Icons -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/css/intlTelInput.css">
+    <style>.iti { width: 100%; }</style>
 
     <link rel="icon" href="{{ asset('backend/images/favicon.png') }}" type="image/x-icon">
 

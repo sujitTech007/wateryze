@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\SubscriptionPaymentFailure;
 use App\Mail\SubscriptionPaymentReceipt;
+use App\Models\Invoice;
 use App\Models\PaymentAttempt;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -52,6 +53,7 @@ class SubscriptionPaymentTest extends TestCase
         $this->assertSame('CAD', $attempt->currency);
         $this->assertSame('cs_test_checkout', $attempt->stripe_checkout_session_id);
         $this->assertDatabaseCount('subscriptions', 0);
+        $this->assertDatabaseCount('invoices', 0);
         $this->assertFalse($user->fresh()->hasWaterMonitoringAccess());
         Mail::assertNotSent(SubscriptionPaymentFailure::class);
 
@@ -187,6 +189,7 @@ class SubscriptionPaymentTest extends TestCase
             ->assertSessionHas('status');
 
         $this->assertDatabaseCount('subscriptions', 1);
+        $this->assertDatabaseCount('invoices', 1);
         $this->assertDatabaseHas('payment_attempts', [
             'stripe_checkout_session_id' => 'cs_test_paid',
             'stripe_subscription_id' => 'sub_test_paid',
@@ -195,17 +198,50 @@ class SubscriptionPaymentTest extends TestCase
             'total_amount_cents' => 49900,
             'receipt_status' => 'sent',
         ]);
+        $invoice = Invoice::query()->firstOrFail();
+        $this->assertDatabaseHas('invoices', [
+            'id' => $invoice->id,
+            'payment_attempt_id' => $user->paymentAttempts()->value('id'),
+            'subscription_id' => $user->subscriptions()->value('id'),
+            'status' => 'paid',
+            'invoice_number' => 'WZ-SUB-'.str_pad((string) $user->paymentAttempts()->value('id'), 10, '0', STR_PAD_LEFT),
+            'amount' => '499.00',
+            'tax_amount' => '0.00',
+            'total' => '499.00',
+            'receipt_status' => 'sent',
+        ]);
         $this->assertTrue($user->fresh()->hasWaterMonitoringAccess());
         Mail::assertSent(SubscriptionPaymentReceipt::class, function (SubscriptionPaymentReceipt $mail) use ($user): bool {
             $content = $mail->render();
 
             return $mail->hasTo($user->email)
                 && $mail->totalCents === 49900
+                && $mail->invoice->invoice_number === 'WZ-SUB-'.str_pad((string) $user->paymentAttempts()->value('id'), 10, '0', STR_PAD_LEFT)
                 && str_contains($content, 'Payment confirmed')
                 && str_contains($content, 'Total paid')
+                && str_contains($content, 'Download your invoice')
+                && str_contains($content, 'Your invoice')
                 && ! str_contains($content, 'Tax')
-                && str_contains($content, 'IoT sensor access');
+                && str_contains($content, 'IoT sensor access')
+                && count($mail->attachments()) === 1;
         });
+
+        $pdf = $this->actingAs($user)
+            ->get(route('user.invoices.download', $invoice))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+        $this->assertStringStartsWith('%PDF-', $pdf->getContent());
+
+        $otherUser = User::factory()->create();
+        $this->actingAs($otherUser)
+            ->get(route('user.invoices.download', $invoice))
+            ->assertNotFound();
+
+        $this->actingAs($user)
+            ->get(route('user.subscription'))
+            ->assertOk()
+            ->assertSee(route('user.invoices.download', $invoice), false)
+            ->assertSee('Download PDF');
     }
 
     public function test_unpaid_checkout_return_does_not_create_subscription_or_grant_access(): void
@@ -247,6 +283,7 @@ class SubscriptionPaymentTest extends TestCase
 
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseCount('stripe_events', 1);
+        $this->assertDatabaseCount('invoices', 1);
         $this->assertTrue($user->fresh()->hasWaterMonitoringAccess());
         Mail::assertSent(SubscriptionPaymentReceipt::class, 1);
     }

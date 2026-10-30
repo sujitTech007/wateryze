@@ -10,6 +10,7 @@ class Invoice extends Model
     protected $fillable = [
         'user_id',
         'subscription_id',
+        'payment_attempt_id',
         'invoice_number',
         'invoice_date',
         'due_date',
@@ -22,6 +23,7 @@ class Invoice extends Model
         'billing_address',
         'city',
         'province',
+        'country',
         'postal_code',
         'notes',
         'paid_at',
@@ -52,5 +54,10 @@ class Invoice extends Model
     public function subscription(): BelongsTo
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function paymentAttempt(): BelongsTo
+    {
+        return $this->belongsTo(PaymentAttempt::class);
     }
 }

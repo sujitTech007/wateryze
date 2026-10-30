@@ -43,6 +43,9 @@ Route::prefix('user')
     ->controller(UserDashboardController::class)
     ->group(function () {
         Route::get('/subscription', [SubscriptionPurchaseController::class, 'index'])->name('subscription');
+        Route::get('/invoices/{invoice}/download', [SubscriptionPurchaseController::class, 'downloadInvoice'])
+            ->whereNumber('invoice')
+            ->name('invoices.download');
         Route::post('/subscription/{plan}/checkout', [SubscriptionPurchaseController::class, 'checkout'])
             ->whereNumber('plan')
             ->middleware('throttle:5,1')

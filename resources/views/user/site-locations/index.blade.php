@@ -34,8 +34,12 @@
                             </td>
                             <td>{{ $site->chemical_usages_count }}</td>
                             <td class="text-nowrap">
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.site-locations.view', $site) }}">View</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.site-locations.edit', $site) }}">Edit</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('user.site-locations.view', $site) }}" aria-label="View site" title="View">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ route('user.site-locations.edit', $site) }}" aria-label="Edit site" title="Edit">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
                             </td>
                         </tr>
                     @empty

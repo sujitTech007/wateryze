@@ -15,28 +15,28 @@
 
     <div class="col-12">
         <label class="form-label">Street address <span class="text-danger">*</span></label>
-        <input class="form-control" name="address" list="saved-addresses" value="{{ old('address', $site?->address) }}" maxlength="255" autocomplete="street-address" required>
-        <div class="form-text">Suggestions, when available, use address details saved to your own account.</div>
+        <input class="form-control" name="address" value="{{ old('address', $site?->address) }}" maxlength="255" autocomplete="street-address" data-google-address-autocomplete required>
+        <div class="form-text">Enter an address and select a Google suggestion to fill in its location details. You can also enter the details manually.</div>
     </div>
 
     <div class="col-md-4">
         <label class="form-label">City <span class="text-danger">*</span></label>
-        <input class="form-control" name="city" value="{{ old('city', $site?->city) }}" maxlength="120" autocomplete="address-level2" required>
+        <input class="form-control" name="city" value="{{ old('city', $site?->city) }}" maxlength="120" autocomplete="address-level2" data-google-address-component="city" required>
     </div>
 
     <div class="col-md-4">
         <label class="form-label">Province/state <span class="text-danger">*</span></label>
-        <input class="form-control" name="province" value="{{ old('province', $site?->province) }}" maxlength="100" autocomplete="address-level1" required>
+        <input class="form-control" name="province" value="{{ old('province', $site?->province) }}" maxlength="100" autocomplete="address-level1" data-google-address-component="province" required>
     </div>
 
     <div class="col-md-4">
         <label class="form-label">Postal/ZIP code</label>
-        <input class="form-control" name="postal_code" value="{{ old('postal_code', $site?->postal_code) }}" maxlength="20" autocomplete="postal-code">
+        <input class="form-control" name="postal_code" value="{{ old('postal_code', $site?->postal_code) }}" maxlength="20" autocomplete="postal-code" data-google-address-component="postal_code">
     </div>
 
     <div class="col-md-4">
         <label class="form-label">Country <span class="text-danger">*</span></label>
-        <input class="form-control" name="country" value="{{ old('country', $site?->country ?? 'Canada') }}" maxlength="100" autocomplete="country-name" required>
+        <input class="form-control" name="country" value="{{ old('country', $site?->country ?? 'Canada') }}" maxlength="100" autocomplete="country-name" data-google-address-component="country" required>
     </div>
 
     <div class="col-md-4">

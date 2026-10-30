@@ -6,7 +6,9 @@
             <a href="{{ route($module['route']) }}" class="text-decoration-none">← {{ $module['title'] }}</a>
             <h1 class="page-title mt-2 mb-0">{{ $module['singular'] }} details</h1>
         </div>
-        <a class="btn btn-primary" href="{{ route($module['route'].'.edit', $item) }}">Edit</a>
+        <a class="btn btn-primary" href="{{ route($module['route'].'.edit', $item) }}" aria-label="Edit {{ strtolower($module['singular']) }}" title="Edit">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+        </a>
     </div>
 
     <section class="card border-0 shadow-sm">
