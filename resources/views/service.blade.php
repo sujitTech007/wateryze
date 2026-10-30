@@ -182,7 +182,9 @@
         </div>
     </section>
     <!-- service-section end -->
-    
+
+
+
 
     <!-- request-section -->
     <section class="request-section bg-color-2">
@@ -237,7 +239,7 @@
                         </div>
                         <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                             <label>Address</label>
-                            <input type="text" name="address" placeholder="Enter address with zipcode" required="">
+                            <input type="text" name="address" placeholder="Enter address with zipcode" data-google-address-autocomplete data-google-address-full required="">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                             <div class="submit-box d-flex align-items-center justify-content-between">

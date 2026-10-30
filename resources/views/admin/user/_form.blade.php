@@ -34,13 +34,13 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="phone">Phone number</label>
-                <input class="form-control" id="phone" type="tel" name="phone" value="{{ old('phone', $user?->phone) }}" maxlength="30" autocomplete="tel-national" inputmode="tel" aria-describedby="phone-error">
+                <input class="form-control" id="phone" type="tel" name="phone" value="{{ old('phone', $user?->phone) }}" maxlength="30" autocomplete="tel-national" inputmode="tel" aria-describedby="phone-error" data-phone-picker data-phone-code="country_code" data-phone-country="phone_country">
                 <input id="country_code" name="country_code" type="hidden" value="{{ old('country_code', $user?->country_code ?? '+1') }}">
                 <input id="phone_country" name="phone_country" type="hidden" value="{{ old('phone_country', $user?->phone_country ?? 'ca') }}">
                 @error('country_code')<div class="text-danger small">{{ $message }}</div>@enderror
                 @error('phone_country')<div class="text-danger small">{{ $message }}</div>@enderror
                 @error('phone')<div class="text-danger small">{{ $message }}</div>@enderror
-                <div id="phone-error" class="text-danger small" role="alert"></div>
+                <div id="phone-error" class="text-danger small" data-phone-error role="alert"></div>
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="company">Company</label>
@@ -53,23 +53,23 @@
             <div class="col-12"><hr><h2 class="h5">Address</h2></div>
             <div class="col-12">
                 <label class="form-label" for="address">Street address</label>
-                <input class="form-control" id="address" name="address" value="{{ old('address', $user?->address) }}" maxlength="255" autocomplete="street-address">
+                <input class="form-control" id="address" name="address" value="{{ old('address', $user?->address) }}" maxlength="255" autocomplete="street-address" data-google-address-autocomplete>
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="city">City</label>
-                <input class="form-control" id="city" name="city" value="{{ old('city', $user?->city) }}" maxlength="255" autocomplete="address-level2">
+                <input class="form-control" id="city" name="city" value="{{ old('city', $user?->city) }}" maxlength="255" autocomplete="address-level2" data-google-address-component="city">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="province">Province / State</label>
-                <input class="form-control" id="province" name="province" value="{{ old('province', $user?->province) }}" maxlength="100" autocomplete="address-level1">
+                <input class="form-control" id="province" name="province" value="{{ old('province', $user?->province) }}" maxlength="100" autocomplete="address-level1" data-google-address-component="province">
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="postal_code">Postal code</label>
-                <input class="form-control" id="postal_code" name="postal_code" value="{{ old('postal_code', $user?->postal_code) }}" maxlength="20" autocomplete="postal-code">
+                <input class="form-control" id="postal_code" name="postal_code" value="{{ old('postal_code', $user?->postal_code) }}" maxlength="20" autocomplete="postal-code" data-google-address-component="postal_code">
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="country">Country</label>
-                <input class="form-control" id="country" name="country" value="{{ old('country', $user?->country) }}" maxlength="100" autocomplete="country-name">
+                <input class="form-control" id="country" name="country" value="{{ old('country', $user?->country) }}" maxlength="100" autocomplete="country-name" data-google-address-component="country">
             </div>
             <div class="col-12"><hr><h2 class="h5">Account password</h2></div>
             <div class="col-md-6">
@@ -88,67 +88,3 @@
         <a class="btn btn-outline-secondary" href="{{ route('admin.users.index') }}">Cancel</a>
     </div>
 </form>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/css/intlTelInput.css">
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/js/intlTelInput.min.js"></script>
-<script>
-    (() => {
-        const phone = document.getElementById('phone');
-        const code = document.getElementById('country_code');
-        const country = document.getElementById('phone_country');
-        const error = document.getElementById('phone-error');
-
-        if (!phone || typeof window.intlTelInput !== 'function') return;
-
-        const countries = window.intlTelInput.getCountryData();
-        const currentCode = (code.value || '').replace(/^\+/, '');
-        const match = countries.find(item => item.iso2 === country.value)
-            || countries.find(item => item.dialCode === currentCode);
-        const telephone = window.intlTelInput(phone, {
-            initialCountry: match ? match.iso2 : 'ca',
-            separateDialCode: true,
-            nationalMode: true,
-            countrySearch: true,
-            loadUtils: () => import('https://cdn.jsdelivr.net/npm/intl-tel-input@25.15.1/build/js/utils.js')
-        });
-
-        function syncCountry() {
-            const selected = telephone.getSelectedCountryData();
-            if (selected?.dialCode) {
-                code.value = '+' + selected.dialCode;
-                country.value = selected.iso2;
-            }
-        }
-
-        phone.addEventListener('countrychange', syncCountry);
-        phone.addEventListener('input', () => {
-            phone.setCustomValidity('');
-            error.textContent = '';
-        });
-        phone.form.addEventListener('submit', async event => {
-            syncCountry();
-            if (!phone.value.trim()) return;
-
-            event.preventDefault();
-            try {
-                await telephone.promise;
-            } catch {
-                error.textContent = 'Phone validation could not load. Check your connection and try again.';
-                phone.setCustomValidity(error.textContent);
-                phone.reportValidity();
-                return;
-            }
-
-            if (!telephone.isValidNumber()) {
-                error.textContent = 'Enter a valid phone number for the selected country.';
-                phone.setCustomValidity(error.textContent);
-                phone.reportValidity();
-                return;
-            }
-
-            phone.setCustomValidity('');
-            phone.form.submit();
-        });
-        syncCountry();
-    })();
-</script>

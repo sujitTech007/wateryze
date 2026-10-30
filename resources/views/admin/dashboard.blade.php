@@ -30,7 +30,7 @@
         <div class="card-header bg-white d-flex justify-content-between align-items-center"><h2 class="h5 mb-0">Recently created users</h2><a href="{{ route('admin.users.index') }}">View all users</a></div>
         <div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Name</th><th>Email</th><th>Joined</th><th></th></tr></thead><tbody>
             @forelse ($recentUsers as $account)
-                <tr><td>{{ trim(($account->first_name ?? '').' '.($account->last_name ?? '')) ?: $account->name }}</td><td>{{ $account->email }}</td><td>{{ $account->created_at->format('M j, Y') }}</td><td><a href="{{ route('admin.users.edit', $account) }}">Edit</a></td></tr>
+                <tr><td>{{ trim(($account->first_name ?? '').' '.($account->last_name ?? '')) ?: $account->name }}</td><td>{{ $account->email }}</td><td>{{ $account->created_at->format('M j, Y') }}</td><td><a class="btn btn-sm btn-outline-primary" href="{{ route('admin.users.edit', $account) }}" aria-label="Edit customer" title="Edit"><i class="fas fa-pen" aria-hidden="true"></i></a></td></tr>
             @empty
                 <tr><td colspan="4" class="text-center text-muted py-4">No users have been created.</td></tr>
             @endforelse

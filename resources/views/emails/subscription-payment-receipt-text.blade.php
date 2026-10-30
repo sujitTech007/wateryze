@@ -13,6 +13,9 @@ Payment method: Stripe
 Next billing date: {{ $subscription->renewal_date?->format('M j, Y') ?? 'See your billing page' }}
 Total paid: {{ strtoupper($currency) }} {{ number_format($totalCents / 100, 2) }}
 Payment reference: {{ $paymentReference }}
+Invoice: {{ $invoice->invoice_number }}
+Download your invoice: {{ route('user.invoices.download', $invoice) }}
+The invoice PDF is attached to this email.
 
 PLAN FEATURES
 @forelse ($subscription->features ?? [] as $feature)

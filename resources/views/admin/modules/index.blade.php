@@ -52,11 +52,17 @@
                                 <td>{{ $value ?? '—' }}</td>
                             @endforeach
                             <td class="text-nowrap">
-                                <a class="btn btn-sm btn-outline-info" href="{{ route($module['route'].'.show', $record) }}">View</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route($module['route'].'.edit', $record) }}">Edit</a>
-                                <form class="d-inline" method="POST" action="{{ route($module['route'].'.destroy', $record) }}" onsubmit="return confirm('Delete this {{ strtolower($module['singular']) }}?')">
+                                <a class="btn btn-sm btn-outline-info" href="{{ route($module['route'].'.show', $record) }}" aria-label="View {{ strtolower($module['singular']) }}" title="View">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route($module['route'].'.edit', $record) }}" aria-label="Edit {{ strtolower($module['singular']) }}" title="Edit">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <form class="d-inline" method="POST" action="{{ route($module['route'].'.destroy', $record) }}" data-confirm="Delete this {{ strtolower($module['singular']) }}?" data-confirm-title="Are you sure you want to delete this {{ strtolower($module['singular']) }}?">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Delete {{ strtolower($module['singular']) }}" title="Delete">
+                                        <i class="fas fa-trash-can" aria-hidden="true"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>

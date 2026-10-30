@@ -14,6 +14,8 @@ class KitDelivery extends Model
         'delivery_address',
         'city',
         'province',
+        'country',
+        'postal_code',
         'kit_type',
         'quantity',
         'delivery_date',

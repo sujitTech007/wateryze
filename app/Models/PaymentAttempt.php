@@ -57,4 +57,9 @@ class PaymentAttempt extends Model
     {
         return $this->hasOne(Subscription::class);
     }
+
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class);
+    }
 }

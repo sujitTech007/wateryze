@@ -7,7 +7,9 @@
             <h1 class="page-title mt-2 mb-1">{{ trim(($user->first_name ?? '').' '.($user->last_name ?? '')) ?: $user->name }}</h1>
             <p class="text-muted mb-0">Customer account details</p>
         </div>
-        <a class="btn btn-primary" href="{{ route('admin.users.edit', $user) }}">Edit customer</a>
+        <a class="btn btn-primary" href="{{ route('admin.users.edit', $user) }}" aria-label="Edit customer" title="Edit">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+        </a>
     </div>
 
     <div class="row g-4">

@@ -40,10 +40,12 @@
         </div>
     </section>
 
-    <form class="mt-4" action="{{ route('user.water-monitoring.destroy', $reading) }}" method="POST" onsubmit="return confirm('Delete this water reading?')">
+    <form class="mt-4" action="{{ route('user.water-monitoring.destroy', $reading) }}" method="POST" data-confirm="Delete this water reading?" data-confirm-title="Are you sure you want to delete this water reading?">
         @csrf
         @method('DELETE')
-        <button class="btn btn-outline-danger" type="submit">Delete reading</button>
+        <button class="btn btn-outline-danger" type="submit" aria-label="Delete water reading" title="Delete reading">
+            <i class="fas fa-trash-can" aria-hidden="true"></i>
+        </button>
     </form>
 </main>
 

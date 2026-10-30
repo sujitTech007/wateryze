@@ -7,7 +7,9 @@
         <div><h1 class="h3 mb-1">{{ $usage->chemical_name }}</h1><p class="text-muted mb-0">Chemical usage details</p></div>
         <div class="d-flex gap-2">
             <a class="btn btn-outline-secondary" href="{{ route('user.chemical-kits.index') }}">Back to usage</a>
-            <a class="btn btn-primary" href="{{ route('user.chemical-kits.edit', $usage) }}">Edit usage</a>
+            <a class="btn btn-primary" href="{{ route('user.chemical-kits.edit', $usage) }}" aria-label="Edit chemical usage" title="Edit">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 
@@ -25,10 +27,12 @@
         </div>
     </section>
 
-    <form class="mt-4" action="{{ route('user.chemical-kits.destroy', $usage) }}" method="POST" onsubmit="return confirm('Delete this chemical usage record?')">
+    <form class="mt-4" action="{{ route('user.chemical-kits.destroy', $usage) }}" method="POST" data-confirm="Delete this chemical usage record?" data-confirm-title="Are you sure you want to delete this chemical usage?">
         @csrf
         @method('DELETE')
-        <button class="btn btn-outline-danger" type="submit">Delete usage record</button>
+        <button class="btn btn-outline-danger" type="submit" aria-label="Delete chemical usage" title="Delete chemical usage">
+            <i class="fas fa-trash-can" aria-hidden="true"></i>
+        </button>
     </form>
 </main>
 

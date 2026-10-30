@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Admin;
 use App\Models\Invoice;
+use App\Models\KitDelivery;
 use App\Models\PartnerLab;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
@@ -18,6 +19,8 @@ class AdminOperationsTest extends TestCase
 
     public function test_admin_can_create_update_view_search_and_delete_module_records(): void
     {
+        config(['services.google_maps.api_key' => 'browser-test-key']);
+
         $admin = Admin::create([
             'name' => 'Operations Admin',
             'email' => 'admin@example.test',
@@ -26,17 +29,64 @@ class AdminOperationsTest extends TestCase
         $customer = User::factory()->create();
         $this->actingAs($admin, 'admin');
 
+        $this->get(route('admin.settings'))
+            ->assertOk()
+            ->assertSee('data-phone-picker', false)
+            ->assertSee('sweetalert2', false)
+            ->assertSee('address-autocomplete.js', false)
+            ->assertSee('data-google-maps-api-key="browser-test-key"', false);
+
+        $this->get(route('admin.kit-delivery.create'))
+            ->assertOk()
+            ->assertSee('data-google-address-autocomplete', false)
+            ->assertSee('data-google-address-component="city"', false)
+            ->assertSee('data-google-address-component="province"', false)
+            ->assertSee('data-google-address-component="country"', false)
+            ->assertSee('data-google-address-component="postal_code"', false)
+            ->assertSee('<select class="form-select" id="kit_type" name="kit_type" required>', false)
+            ->assertSee('<option value="" selected disabled>Select kit type</option>', false)
+            ->assertSee('value="Water Testing Kit"', false)
+            ->assertSee('value="Chemical Testing Kit"', false)
+            ->assertSee('value="Compliance Kit"', false);
+
         $this->post(route('admin.kit-delivery.store'), [
             'user_id' => $customer->id,
             'delivery_address' => '123 Test Street',
+            'city' => 'Toronto',
+            'province' => 'Ontario',
+            'country' => 'Canada',
+            'postal_code' => 'M5V 2N8',
             'kit_type' => 'Water Testing Kit',
             'quantity' => 2,
             'delivery_date' => '2026-10-28',
             'status' => 'pending',
         ])->assertRedirect(route('admin.kit-delivery'));
+        $kitDelivery = KitDelivery::query()->firstOrFail();
+        $this->get(route('admin.kit-delivery.edit', $kitDelivery))
+            ->assertOk()
+            ->assertSee('value="Water Testing Kit" selected', false)
+            ->assertSee('value="Chemical Testing Kit"', false);
+        $this->put(route('admin.kit-delivery.update', $kitDelivery), [
+            'user_id' => $customer->id,
+            'delivery_address' => '123 Test Street',
+            'city' => 'Toronto',
+            'province' => 'Ontario',
+            'country' => 'Canada',
+            'postal_code' => 'M5V 2N8',
+            'kit_type' => 'Unlisted Kit',
+            'quantity' => 2,
+            'delivery_date' => '2026-10-28',
+            'status' => 'pending',
+        ])->assertSessionHasErrors('kit_type');
         $this->assertDatabaseHas('kit_deliveries', [
+            'id' => $kitDelivery->id,
             'user_id' => $customer->id,
             'quantity' => 2,
+            'kit_type' => 'Water Testing Kit',
+            'city' => 'Toronto',
+            'province' => 'Ontario',
+            'country' => 'Canada',
+            'postal_code' => 'M5V 2N8',
             'status' => 'pending',
         ]);
 
@@ -55,7 +105,12 @@ class AdminOperationsTest extends TestCase
         $this->get(route('admin.subscription-plans'))
             ->assertOk()
             ->assertSee('Starter')
-            ->assertSee('3 features');
+            ->assertSee('3 features')
+            ->assertSee('aria-label="View subscription plan"', false)
+            ->assertSee('aria-label="Edit subscription plan"', false)
+            ->assertSee('data-confirm-title="Are you sure you want to delete this subscription plan?"', false)
+            ->assertSee('fa-trash-can', false)
+            ->assertDontSee('onsubmit="return confirm(', false);
         $this->get(route('admin.subscription-plans.show', $plan))
             ->assertOk()
             ->assertSee('Subscription plan details')
@@ -112,6 +167,10 @@ class AdminOperationsTest extends TestCase
             'status' => 'active',
             'services' => ['Water Testing'],
         ])->assertRedirect(route('admin.partner-labs'));
+        $this->get(route('admin.partner-labs.create'))
+            ->assertOk()
+            ->assertSee('data-phone-picker', false)
+            ->assertSee('dashboard-enhancements.js', false);
         $lab = PartnerLab::firstOrFail();
         $this->get(route('admin.partner-labs'))
             ->assertOk()
@@ -187,6 +246,11 @@ class AdminOperationsTest extends TestCase
             'tax_amount' => '2.01',
             'status' => 'paid',
             'billing_email' => $otherCustomer->email,
+            'billing_address' => '123 Test Street',
+            'city' => 'Toronto',
+            'province' => 'Ontario',
+            'country' => 'Canada',
+            'postal_code' => 'M5V 2N8',
         ];
         $this->post(route('admin.billing.store'), $invoice)
             ->assertSessionHasErrors('subscription_id');
@@ -197,6 +261,8 @@ class AdminOperationsTest extends TestCase
             ->assertRedirect(route('admin.billing'));
         $savedInvoice = Invoice::firstOrFail();
         $this->assertSame('22.00', $savedInvoice->total);
+        $this->assertSame('Canada', $savedInvoice->country);
+        $this->assertSame('M5V 2N8', $savedInvoice->postal_code);
         $this->assertNotNull($savedInvoice->paid_at);
         $this->get(route('admin.billing.show', $savedInvoice))
             ->assertOk()

@@ -55,12 +55,18 @@
                             <td>{{ $user->water_readings_count }}</td>
                             <td>{{ $user->created_at?->format('M j, Y') ?? '—' }}</td>
                             <td class="text-nowrap">
-                                <a class="btn btn-sm btn-outline-info" href="{{ route('admin.users.show', $user) }}">View</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.users.edit', $user) }}">Edit</a>
-                                <form class="d-inline" method="POST" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('Delete this customer account and its associated data?')">
+                                <a class="btn btn-sm btn-outline-info" href="{{ route('admin.users.show', $user) }}" aria-label="View customer" title="View">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.users.edit', $user) }}" aria-label="Edit customer" title="Edit">
+                                    <i class="fas fa-pen" aria-hidden="true"></i>
+                                </a>
+                                <form class="d-inline" method="POST" action="{{ route('admin.users.destroy', $user) }}" data-confirm="Delete this customer account and its associated data?" data-confirm-title="Are you sure you want to delete this customer?">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Delete customer" title="Delete">
+                                        <i class="fas fa-trash-can" aria-hidden="true"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>

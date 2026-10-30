@@ -21,6 +21,14 @@
                     @php
                         $fieldType = $field['type'] ?? 'text';
                         $oldValue = old($field['name'], $item?->{$field['name']});
+                        $isAddressField = in_array($field['name'], ['address', 'delivery_address', 'billing_address'], true);
+                        $addressComponent = match ($field['name']) {
+                            'city' => 'city',
+                            'province' => 'province',
+                            'country' => 'country',
+                            'postal_code' => 'postal_code',
+                            default => null,
+                        };
                         if ($oldValue instanceof \Carbon\CarbonInterface) {
                             $oldValue = $oldValue->format('Y-m-d');
                         }
@@ -69,20 +77,23 @@
                         <div class="{{ $fieldType === 'textarea' ? 'col-12' : 'col-md-6' }}">
                             <label class="form-label" for="{{ $field['name'] }}">{{ $field['label'] }}</label>
                             @if ($fieldType === 'textarea')
-                                <textarea class="form-control" id="{{ $field['name'] }}" name="{{ $field['name'] }}" rows="3" maxlength="5000">{{ $oldValue }}</textarea>
+                                <textarea class="form-control" id="{{ $field['name'] }}" name="{{ $field['name'] }}" rows="3" maxlength="5000" @if ($isAddressField) data-google-address-autocomplete @endif>{{ $oldValue }}</textarea>
                             @elseif ($fieldType === 'select')
                                 @php
                                     $fieldOptions = $field['choices'] ?? ($options[$field['name']] ?? collect());
                                     $isRequired = in_array('required', $field['rules'] ?? [], true);
                                 @endphp
                                 <select class="form-select" id="{{ $field['name'] }}" name="{{ $field['name'] }}" @required($isRequired)>
-                                    @if (! $isRequired)<option value="">Select an option</option>@endif
+                                    <option value="" @selected($oldValue === null || $oldValue === '') @disabled($isRequired)>Select {{ strtolower($field['label']) }}</option>
                                     @foreach ($fieldOptions as $value => $label)
                                         <option value="{{ $value }}" @selected((string) $oldValue === (string) $value)>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             @else
-                                <input class="form-control" id="{{ $field['name'] }}" type="{{ $fieldType }}" name="{{ $field['name'] }}" value="{{ $oldValue }}" @if (isset($field['step'])) step="{{ $field['step'] }}" @endif @required(in_array('required', $field['rules'] ?? [], true))>
+                                <input class="form-control" id="{{ $field['name'] }}" type="{{ $fieldType }}" name="{{ $field['name'] }}" value="{{ $oldValue }}" @if ($isAddressField) data-google-address-autocomplete @endif @if ($addressComponent) data-google-address-component="{{ $addressComponent }}" @endif @if ($fieldType === 'tel') data-phone-picker @endif @if (isset($field['step'])) step="{{ $field['step'] }}" @endif @required(in_array('required', $field['rules'] ?? [], true))>
+                                @if ($fieldType === 'tel')
+                                    <div class="text-danger small" data-phone-error role="alert"></div>
+                                @endif
                             @endif
                         </div>
                     @endif

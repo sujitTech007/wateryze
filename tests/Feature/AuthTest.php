@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Mail\WelcomeUser;
 use App\Models\Admin;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Tests\Feature\Concerns\CreatesPaidSubscription;
 use Tests\TestCase;
 
@@ -17,6 +20,8 @@ class AuthTest extends TestCase
 
     public function test_registration_validates_input_creates_user_and_signs_them_in(): void
     {
+        Mail::fake();
+
         $response = $this->post(route('signup.store'), [
             'first_name' => 'Taylor',
             'last_name' => 'Example',
@@ -48,6 +53,11 @@ class AuthTest extends TestCase
             ->assertSee('Dashboard')
             ->assertSee('Welcome to your dashboard')
             ->assertSee('Your account has been created successfully.');
+        Mail::assertSent(WelcomeUser::class, function (WelcomeUser $mail) use ($user): bool {
+            return $mail->hasTo($user->email)
+                && $mail->customer->is($user)
+                && str_contains($mail->render(), 'Open your dashboard');
+        });
     }
 
     public function test_guest_cannot_access_user_dashboard(): void
@@ -125,6 +135,7 @@ class AuthTest extends TestCase
         $this->get(route('signup'))
             ->assertOk()
             ->assertSee('action="'.route('signup.store').'"', false)
+            ->assertSee('toast-notifications.js', false)
             ->assertSee('name="first_name"', false)
             ->assertSee('name="last_name"', false)
             ->assertSee('name="country_code"', false)
@@ -154,6 +165,41 @@ class AuthTest extends TestCase
             ->assertSessionHasErrors(['first_name', 'email', 'country_code', 'phone', 'password', 'terms']);
         $this->assertDatabaseCount('users', 1);
         $this->assertGuest();
+        $this->get(route('signup'))->assertSee('data-toast-errors', false);
+    }
+
+    public function test_registration_succeeds_and_shows_warning_when_welcome_email_delivery_fails(): void
+    {
+        Mail::shouldReceive('to')
+            ->once()
+            ->with('taylor@example.com')
+            ->andReturn(new class
+            {
+                public function send(WelcomeUser $mail): void
+                {
+                    throw new TransportException('Mail server unavailable');
+                }
+            });
+
+        $this->post(route('signup.store'), [
+            'first_name' => 'Taylor',
+            'last_name' => 'Example',
+            'email' => 'taylor@example.com',
+            'country_code' => '+1',
+            'phone' => '5551234567',
+            'password' => 'A-strong-password-123',
+            'password_confirmation' => 'A-strong-password-123',
+            'terms' => '1',
+        ])->assertRedirect('/user/dashboard');
+
+        $user = User::where('email', 'taylor@example.com')->firstOrFail();
+        $this->assertAuthenticatedAs($user);
+
+        $this->get('/user/dashboard')
+            ->assertOk()
+            ->assertSee('Your account has been created successfully.')
+            ->assertSee('could not send the welcome email.')
+            ->assertSee('data-flash-warning', false);
     }
 
     public function test_user_can_log_in_and_log_out(): void

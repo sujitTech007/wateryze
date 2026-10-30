@@ -1699,8 +1699,7 @@ body.sidebar-open::before {
 
 
 .btn {
-
-    padding: 10px 20px;
+    padding: 10px 10px;
 
     font-weight: 500;
 
@@ -1708,7 +1707,7 @@ body.sidebar-open::before {
 
     transition: all 0.3s ease;
 
-    border: none;
+    /* border: none; */
 
     display: inline-flex;
 

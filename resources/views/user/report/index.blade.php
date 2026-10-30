@@ -37,7 +37,7 @@
                             <td>{{ $report->tds ?? '—' }}</td>
                             <td>{{ $report->turbidity ?? '—' }}</td>
                             <td>{{ $report->complianceStatus($thresholds) }}</td>
-                            <td><a class="btn btn-sm btn-outline-primary" href="{{ route('user.reports.view', $report) }}">View</a></td>
+                            <td><a class="btn btn-sm btn-outline-primary" href="{{ route('user.reports.view', $report) }}" aria-label="View report" title="View"><i class="fas fa-eye" aria-hidden="true"></i></a></td>
                         </tr>
                     @empty
                         <tr>

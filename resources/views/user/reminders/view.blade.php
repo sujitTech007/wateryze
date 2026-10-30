@@ -7,7 +7,9 @@
         <div><h1 class="h3 mb-1">{{ $reminder->title }}</h1><p class="text-muted mb-0">Reminder details</p></div>
         <div class="d-flex gap-2">
             <a href="{{ route('user.schedule') }}" class="btn btn-outline-secondary">Back to reminders</a>
-            <a href="{{ route('user.schedule.edit', $reminder) }}" class="btn btn-primary">Edit reminder</a>
+            <a href="{{ route('user.schedule.edit', $reminder) }}" class="btn btn-primary" aria-label="Edit reminder" title="Edit">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 
@@ -41,10 +43,12 @@
     </section>
 
     <form class="mt-4" action="{{ route('user.schedule.destroy', $reminder) }}" method="POST"
-        onsubmit="return confirm('Delete this reminder?')">
+        data-confirm="Delete this reminder?" data-confirm-title="Are you sure you want to delete this reminder?">
         @csrf
         @method('DELETE')
-        <button class="btn btn-outline-danger" type="submit">Delete reminder</button>
+        <button class="btn btn-outline-danger" type="submit" aria-label="Delete reminder" title="Delete reminder">
+            <i class="fas fa-trash-can" aria-hidden="true"></i>
+        </button>
     </form>
 </main>
 
