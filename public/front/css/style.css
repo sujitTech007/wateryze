@@ -5661,14 +5661,20 @@ content: "✔";
    background: #0e2c50;
 
  }
+.fs-12{
+  font-size: 12px;
+}
 
+.fs-14{
+  font-size: 14px;
+}
 
 
  .main-footer .footer-top {
 
    position: relative;
 
-   padding: 50px 0px 50px;
+   padding: 30px 0px 40px;
 
  }
 
@@ -5810,7 +5816,7 @@ content: "✔";
 
    position: relative;
 
-   padding: 60px 0px 50px 0px;
+   padding: 40px 0px 50px 0px;
 
  }
 
@@ -11556,7 +11562,7 @@ content: "✔";
 
    display: block;
 
-   font-size: 18px;
+   font-size: 16px;
 
    line-height: 32px;
 
@@ -11710,7 +11716,7 @@ content: "✔";
 
    display: inline-block;
 
-   font-size: 16px;
+   font-size: 14px;
 
    font-weight: 600;
 
@@ -14218,7 +14224,7 @@ background: #d8edff;
 
 
 
-    font-size: 35px;
+    font-size: 30px;
 
     line-height: 1;
 
@@ -14281,7 +14287,7 @@ background: #d8edff;
 
 
 
-    padding: 7px 0;
+    padding: 5px 0;
 
 
 
@@ -14465,11 +14471,6 @@ background: #d8edff;
 
 
 
-    .price strong {
-
-        font-size: 34px;
-
-    }
 
 
 
@@ -14633,11 +14634,7 @@ background: #d8edff;
 
 
 
-    .price strong {
-
-        font-size: 32px;
-
-    }
+  
 
 
 

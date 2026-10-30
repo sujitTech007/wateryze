@@ -24,7 +24,6 @@
                         </p>
 
                         <div class="hero-buttons">
-                            <a href="{{ route('contact') }}" class="btn btn-primary-custom">REQUEST A DEMO</a>
                             <a href="{{ route('contact') }}" class="btn btn-secondary-custom">GET A FREE CONSULTANT</a>
                         </div>
                     </div>
@@ -55,7 +54,7 @@
 
                 <div class="col-lg-3 col-md-3 feature-item">
                     <div class="icon">
-                        <img src="images/vector-1.png" alt="">
+                        <img src="{{ asset('public/front/images//vector-1.png') }}" alt="">
                     </div>
                     <h4>Pre-Calibrated Kits</h4>
                     <p>
@@ -66,7 +65,7 @@
 
                 <div class="col-lg-3 col-md-3 feature-item ">
                     <div class="icon">
-                        <img src="images/vector_2.png" alt="">
+                        <img src="{{ asset('public/front/images/vector_2.png') }}" alt="">
                     </div>
                     <h4>Smart Monitoring</h4>
                     <p>
@@ -78,7 +77,7 @@
 
                 <div class="col-lg-3 col-md-3 feature-item ">
                     <div class="icon">
-                        <img src="images/vector-3.png" alt="">
+                        <img src="{{ asset('public/front/images/vector-3.png') }}" alt="">
                     </div>
                     <h4>Auto Compliance Reporting</h4>
                     <p>
@@ -89,7 +88,7 @@
 
                 <div class="col-lg-3 col-md-3 feature-item ">
                     <div class="icon">
-                        <img src="images/container.png" alt="">
+                        <img src="{{ asset('public/front/images/container.png') }}" alt="">
                     </div>
                     <h4>Expert Support</h4>
                     <p>
@@ -132,17 +131,18 @@
           @forelse ($plans as $plan)
             <article class="pricing-card {{ $plan->name === 'Premium' ? 'popular' : '' }}">
               @if ($plan->name === 'Premium')
-                <div class="popular-badge">★ &nbsp; PREMIUM</div>
+                <div class="popular-badge py-1">★ &nbsp; PREMIUM</div>
               @endif
-              <div class="plan-icon">
-                <img src="{{ asset('public/front/images/bottle_2.png') }}" alt="">
+              <div class="d-flex justify-content-start align-items-center gap-3 mb-2">
+                    <div class="plan-icon mb-0">
+                        <img src="{{ asset('public/front/images/bottle_2.png') }}" alt="">
+                    </div>
+                    <h2 class="mb-0">{{ $plan->name }}</h2>
               </div>
-
-              <h2>{{ $plan->name }}</h2>
               @if ($plan->description)
-                <p>{{ $plan->description }}</p>
+                <p class="fs-14">{{ $plan->description }}</p>
               @endif
-              <div class="price">
+              <div class="price mt-3">
                 <strong>CAD {{ number_format((float) $plan->amount, 2) }}</strong>
                 <span>/ {{ $plan->billing_cycle === 'yearly' ? 'year' : ($plan->billing_cycle === 'quarterly' ? 'quarter' : 'month') }}</span>
               </div>

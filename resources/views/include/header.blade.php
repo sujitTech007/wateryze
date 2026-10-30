@@ -46,7 +46,7 @@
 
     <link href="{{ asset('public/front/css/owl.css?v=1.0') }}" rel="stylesheet">
 
-    <link href="{{ asset('public/front/css/bootstrap.css?v=1.0') }}" rel="stylesheet">
+    <link href="{{ asset('public/front/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('public/front/css/jquery.fancybox.min.css?v=1.0') }}" rel="stylesheet">
 

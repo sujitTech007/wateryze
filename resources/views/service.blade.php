@@ -182,75 +182,7 @@
         </div>
     </section>
     <!-- service-section end -->
-
- <!-- testimonial-section  -->
-    <section class="testimonial-section">
-        <div class="auto-container">
-            <div class="top-title clearfix">
-                <div class="title-inner">
-                    <div class="sec-title">
-                        <h1>Our Testimonials</h1>
-                    </div>
-                </div>
-                <div class="text-inner">
-                    <div class="text">Hear from our satisfied customers who have transformed their water treatment processes with Wateryze.</div>
-                </div>
-            </div>
-            <div class="inner-content">
-                <div class="client-testimonial-carousel owl-carousel owl-theme owl-dots-none">
-                    <div class="testimonial-content">
-                        <div class="inner-box">
-                            <div class="text">"Wateryze has transformed our spa's water treatment process. The
-                                pre-calibrated kits make compliance effortless, and we've saved thousands on potential
-                                fines. Highly recommended!"</div>
-                            <div class="author-info">
-                                <h5 class="name">Sarah Mitchell</h5>
-                                <span class="designation">Spa Owner, Ontario</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="inner-box">
-                            <div class="text">"The real-time monitoring and automated reports have been game-changers
-                                for our restaurant. We're always inspection-ready and our water quality has never been
-                                better."</div>
-                            <div class="author-info">
-                                <h5 class="name">Mike Chen</h5>
-                                <span class="designation">Restaurant Manager, BC</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="inner-box">
-                            <div class="text">"As a small manufacturing business, Wateryze's subscription model fits our
-                                budget perfectly. The expert support is invaluable when we need guidance."</div>
-                            <div class="author-info">
-                                <h5 class="name">Jennifer Adams</h5>
-                                <span class="designation">Operations Director, Alberta</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--Client Thumbs Carousel-->
-                <div class="client-thumb-outer">
-                    <div class="client-thumbs-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
-                        <div class="thumb-item">
-                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_1.png') }}" alt=""></figure>
-                        </div>
-                        <div class="thumb-item">
-                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_2.png') }}    " alt=""></figure>
-                        </div>
-                        <div class="thumb-item">
-                            <figure class="thumb-box"><img src="{{ asset('public/front/images/testimonial_3.png') }}" alt=""></figure>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- testimonial-section end -->
-
+    
 
     <!-- request-section -->
     <section class="request-section bg-color-2">

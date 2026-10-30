@@ -13,37 +13,22 @@
     <title>Wateryze - Admin Dashboard</title>
 
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
 
     <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="{{ asset('public/front/css/bootstrap.min.css') }}">
+     <link rel="stylesheet" href="{{ asset('public/front//css/all.min.css') }}">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-
-    <!-- Font Awesome Icons -->
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="icon" href="{{ asset('backend/images/favicon.png') }}" type="image/x-icon">
-
-
-
-    <!-- Google Fonts - Poppins -->
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-
-        rel="stylesheet">
-
-
+    <link rel="icon" href="{{ asset('public/front/images/favicon.png') }}" type="image/x-icon">
 
     <!-- Chart.js -->
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-
     <!-- Custom CSS -->
-
     <link rel="stylesheet" href="{{ asset('public/user/css/style.css') }}">
 
 </head>
@@ -284,10 +269,10 @@
                     <!-- Admin Profile Dropdown -->
 
    
-<div class="nav-item dropdown profile-wrapper">
+<div class="nav-item dropdown profile-wrapper m-0">
 
     <button type="button"
-            class="nav-link profile-btn"
+            class="nav-link profile-btn bg-transparent p-0"
             id="profileBtn"
             data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -308,13 +293,13 @@
         aria-labelledby="profileBtn">
 
         <li>
-            <a href="{{ route('admin.profile') }}" class="dropdown-item">
+            <a href="{{ route('admin.profile') }}" class="dropdown-item gap-0">
                 <i class="fas fa-user me-2"></i> My Profile
             </a>
         </li>
 
         <li>
-            <a href="{{ route('admin.settings') }}" class="dropdown-item">
+            <a href="{{ route('admin.settings') }}" class="dropdown-item gap-0">
                 <i class="fas fa-lock me-2"></i> Change Password
             </a>
         </li>
@@ -324,7 +309,7 @@
         <li>
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
-                <button type="submit" class="dropdown-item text-danger">
+                <button type="submit" class="dropdown-item gap-0 text-danger">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </button>
             </form>
