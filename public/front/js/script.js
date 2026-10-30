@@ -310,7 +310,78 @@
 
 
 	//Client Testimonial Carousel
-	
+	if ($('.client-testimonial-carousel').length && $('.client-thumbs-carousel').length) {
+
+		var $sync3 = $(".client-testimonial-carousel"),
+			$sync4 = $(".client-thumbs-carousel"),
+			flag = false,
+			duration = 500;
+
+			$sync3
+				.owlCarousel({
+					loop:true,
+					items: 1,
+					margin: 0,
+					nav: true,
+					navText: [ '<span class="fa fa-arrow-left"></span>', '<span class="fa-solid fa-arrow-right"></span>' ],
+					dots: false,
+					autoplay: true,
+					autoplayTimeout: 5000
+				})
+				.on('changed.owl.carousel', function (e) {
+					if (!flag) {
+						flag = false;
+						$sync4.trigger('to.owl.carousel', [e.item.index, duration, true]);
+						flag = false;
+					}
+				});
+
+			$sync4
+				.owlCarousel({
+					loop:true,
+					margin:20,
+					items: 1,
+					nav: false,
+					navText: [ '<span class="fa fa-arrow-left"></span>', '<span class="fa-solid fa-arrow-right"></span>' ],
+					dots: true,
+					center: false,
+					autoplay: true,
+					autoplayTimeout: 5000,
+					responsive: {
+						0:{
+				            items:1,
+				            autoWidth: false
+				        },
+				        400:{
+				            items:1,
+				            autoWidth: false
+				        },
+				        600:{
+				            items:1,
+				            autoWidth: false
+				        },
+				        1000:{
+				            items:1,
+				            autoWidth: false
+				        },
+						1200:{
+				            items:1,
+				            autoWidth: false
+				        }
+				    },
+				})
+				
+		.on('click', '.owl-item', function () {
+			$sync3.trigger('to.owl.carousel', [$(this).index(), duration, true]);
+		})
+		.on('changed.owl.carousel', function (e) {
+			if (!flag) {
+				flag = true;		
+				$sync3.trigger('to.owl.carousel', [e.item.index, duration, true]);
+				flag = false;
+			}
+		});
+	}
 
 
 	// Four Item Carousel

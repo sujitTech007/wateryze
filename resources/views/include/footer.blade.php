@@ -94,7 +94,7 @@
     <footer class="main-footer">
         <div class="footer-top">
             <div class="border-shap">
-                <div class="border-3" style="background-image: url(images/border-4.png);"></div>
+                <div class="border-3" style="background-image: url({{ asset('public/front/images/border-4.png') }});"></div>
             </div>
             <div class="auto-container">
                 <div class="inner-box clearfix">
@@ -179,7 +179,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <div class="auto-container">
+            <div class="auto-container p-0">
                 <div class="copyright">Copyrights &copy; 2025 <a href="{{ route('home') }}">Wateryze Platform</a>. All rights reserved.
                 </div>
             </div>
